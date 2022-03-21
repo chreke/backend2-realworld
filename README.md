@@ -8,7 +8,7 @@ Starta servern genom att köra kommandot `node app.js` - ni bör nu kunna komma 
 
 ## Postman
 
-Projektet innehåller även en [Postman-collection](api/RealWorld.postman_collection.json) som ni kan använda för att 
+Projektet innehåller även en [Postman-collection](api/RealWorld.postman_collection.json) som ni kan använda för att
 
 För att köra alla Postman-tester kan ni använda:
 
@@ -22,11 +22,13 @@ npx newman run api/RealWorld.postman_collection.json \
   "$@"
 ```
 
- - `$APIURL` ska vara URL:en till ert API, e.g. `http://localhost:3000`
- - `$USERNAME` ska vara ett unikt användarnamn
- - `$PASSWORD` ska vara ett lösenord
- - `$EMAIL` ska vara en email-address
+- `$APIURL` ska vara URL:en till ert API, e.g. `http://localhost:3000`
+- `$USERNAME` ska vara ett unikt användarnamn
+- `$PASSWORD` ska vara ett lösenord
+- `$EMAIL` ska vara en email-address
 
 Det finns även ett shell-script som kör alla tester: [run-api-tests.sh](api/run-api-tests.sh)
 
 Scriptet skapar automatiskt nya värden för `USERNAME` och `EMAIL`, vilket gör det lättare att köra upprepade gånger.
+
+Group members:
