@@ -31,4 +31,8 @@ Det finns även ett shell-script som kör alla tester: [run-api-tests.sh](api/ru
 
 Scriptet skapar automatiskt nya värden för `USERNAME` och `EMAIL`, vilket gör det lättare att köra upprepade gånger.
 
-Group members:
+# Group members:
+
+- 1
+- 2
+- Kriksy - Viktoria Toldi
