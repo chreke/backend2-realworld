@@ -34,5 +34,5 @@ Scriptet skapar automatiskt nya värden för `USERNAME` och `EMAIL`, vilket gör
 # Group members:
 
 - 1
-- 2
+- 2 Panos Tsapanidis
 - Kriksy - Viktoria Toldi
