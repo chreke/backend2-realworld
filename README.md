@@ -33,6 +33,6 @@ Scriptet skapar automatiskt nya värden för `USERNAME` och `EMAIL`, vilket gör
 
 # Group members:
 
-- 1
+- Daigoro Miguel Persson
 - 2 Panos Tsapanidis
 - Kriksy - Viktoria Toldi
