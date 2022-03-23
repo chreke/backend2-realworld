@@ -1,15 +1,23 @@
 const express = require("express");
 const path = require("path");
+const mongoose = require("mongoose")
 
-const app = express()
 const PORT = 3000;
 
-app.use(express.static("dist"));
+mongoose.connect("mongodb://127.0.0.1/real-world")
+  .then(() => {
+    const app = express()
 
-app.get("/", (_req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
-});
+    app.use(express.static("dist"));
 
-app.listen(PORT, () => {
-  console.log(`Started Express server on port ${PORT}`);
-});
+    app.get("/", (_req, res) => {
+      res.sendFile(path.join(__dirname, "dist", "index.html"));
+    });
+
+    app.listen(PORT, () => {
+      console.log(`Started Express server on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log("Mongo connection error: ", err)
+  })
