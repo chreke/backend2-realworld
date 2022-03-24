@@ -1,6 +1,9 @@
 const express = require("express");
+const app = express()
+const PORT = 3000;
 const path = require("path");
 
+// Connection to MongoDB Atlas
 const mongoose = require("mongoose");
 mongoose.connect("mongodb+srv://panos:123@realworld-gruppuppgift.qxob6.mongodb.net/realworld-gruppuppgift?retryWrites=true&w=majority")
 .then(() => {
@@ -10,8 +13,13 @@ mongoose.connect("mongodb+srv://panos:123@realworld-gruppuppgift.qxob6.mongodb.n
   console.log("Connection to MongoDB error " + err);
 })
 
-const app = express()
-const PORT = 3000;
+// For POST requests
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
+// Routes
+app.use("/api", require("./routes/api"));
+
 
 app.use(express.static("dist"));
 
