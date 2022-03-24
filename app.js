@@ -1,67 +1,37 @@
 const express = require("express");
 const path = require("path");
-const passport = require("passport");
-const session = require("express-session");
+
 const { User } = require("./models/User");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 
 const app = express();
 const PORT = 3000;
 
+app.use(express.json());
 app.use(express.static("dist"));
-app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
-<<<<<<< HEAD
-app.get("/test", (_req, res) => {
-  res.send("test"); //hej
-=======
-app.post("/register", async (_req, res) => {
-  const {email, password, username} = req.body
+app.post("/users", async (req, res) => {
+  console.log(req.body);
+  const { username, email, password } = req.body.user;
+  console.log("username", username);
   try {
-  
+    const user = await User.create({
+      username: username,
+      email: email,
+      password: password,
+    });
+    res.status(201).json({ user });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ message: "Problem to register" });
+  }
 });
 
-passport.use(User.createStrategy());
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
-app.use(
-  session({
-    secret: "nemas",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-app.use(passport.authenticate("session"));
-
-app.post("/login", (_req, res) => {
-  res.send("test");
->>>>>>> master
-});
-
+mongoose.connect("mongodb://localhost/realworld");
 app.listen(PORT, () => {
   console.log(`Started Express server on port ${PORT}`);
 });
-
-//establish connection to database
-mongoose.connect(
-  "mongodb+srv://annarylander:@cluster0.fjx89.mongodb.net/realworld",
-  {
-    useFindAndModify: false,
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    useCreateIndex: true,
-  },
-  (err) => {
-    if (err) return console.log("Error: ", err);
-    console.log(
-      "MongoDB Connection -- Ready state is:",
-      mongoose.connection.readyState
-    );
-  }
-);
