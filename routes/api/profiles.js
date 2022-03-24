@@ -2,6 +2,7 @@ const { Router } = require("express");
 
 const route = Router();
 
+// Get a profile
 route.get("/:username", (req, res) => {
     res.send({
         "profile": {
