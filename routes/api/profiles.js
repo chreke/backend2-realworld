@@ -2,7 +2,7 @@ const { Router } = require("express");
 
 const route = Router();
 
-route.get("/", (req, res) => {
+route.get("/:username", (req, res) => {
     res.send({
         "profile": {
             "username": req.params.username,
