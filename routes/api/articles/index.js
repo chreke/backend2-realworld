@@ -70,5 +70,35 @@ route.get("/:slug", (req, res) => {
 })
 
 // Get comments on article
+route.get("/:slug/comments", (req,res) => {
+    res.send({
+        "comments": [
+            {
+            "id": 1,
+            "createdAt": "2022-03-24",
+            "updatedAt": "2022-03-25",
+            "body": "This is the 1st comment's body",
+            "author": {
+                "username": "panos",
+                "bio": "Hello there",
+                "image": "https://st3.depositphotos.com/26608456/31707/i/450/depositphotos_317074692-stock-photo-cute-white-lama-with-black.jpg",
+                "following": false
+                }
+            },
+            {
+            "id": 2,
+            "createdAt": "2022-03-24",
+            "updatedAt": "2022-03-25",
+            "body": "This is the 2nd comment's body",
+            "author": {
+                "username": "mary",
+                "bio": "Hello, I am Mary",
+                "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXZCwR5JBTDBHaq9YzKXrxALwYzzxlSazJ1A&usqp=CAU",
+                "following": false
+                }
+            }
+        ]
+    })
+})
 
 module.exports = route
