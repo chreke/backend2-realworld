@@ -45,7 +45,7 @@ app.listen(PORT, () => {
 
 //establish connection to database
 mongoose.connect(
-  "mongodb+srv://annarylander:node2022@cluster0.fjx89.mongodb.net/realworld",
+  "mongodb+srv://annarylander:@cluster0.fjx89.mongodb.net/realworld",
   {
     useFindAndModify: false,
     useUnifiedTopology: true,
