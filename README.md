@@ -50,5 +50,5 @@ Scriptet skapar automatiskt nya värden för `USERNAME` och `EMAIL`, vilket gör
 # Group members:
 
 - Daigoro Miguel Persson
-- 2 Panos Tsapanidis
+- Panos Tsapanidis (added via forking)
 - Kriksy - Viktoria Toldi
