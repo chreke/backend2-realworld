@@ -26,7 +26,7 @@ app.use(express.static("dist"))
 app.use(express.json())
 app.use(authorizeUser)
 
-app.use("/articles", articlesRouter)
+app.use("/api/articles", articlesRouter)
 
 app.post("/users", async (req, res) => {
   const { username, email, password } = req.body.user
