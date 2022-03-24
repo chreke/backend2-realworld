@@ -5,8 +5,10 @@ const route = Router();
 route.get("/", (req, res) => {
     res.send({
         "profile": {
-            "username": "panos",
-            "image": null,
+            "username": req.params.username,
+            "bio": "Hello there",
+            "image": "https://static.productionready.io/images/smiley-cyrus.jpg",
+            "following": false
         }
     })
 }) 
