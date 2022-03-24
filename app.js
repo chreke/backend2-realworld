@@ -30,7 +30,6 @@ app.use("/articles", articlesRouter)
 
 app.post("/users", async (req, res) => {
   const { username, email, password } = req.body.user
-  console.log(req.body)
   const user = new User({ username, email, password })
   const createdUser = await user.save()
 
@@ -47,7 +46,6 @@ app.post("/users/login", async (req, res) => {
   const user = await User.login(email, password)
   if (user) {
     const userId = user._id.toString()
-    console.log(userId)
     const token = jwt.sign(
       { userId, email: user.email },
       process.env.JWT_SECRET,
@@ -69,7 +67,6 @@ app.get("/user", async (req, res) => {
   const user = req.user
   const { userId } = user
   const databaseUser = await User.findOne({ _id: userId })
-  console.log(databaseUser)
   res.json({
     user: {
       email: user.email,
