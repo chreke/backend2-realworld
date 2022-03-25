@@ -24,7 +24,7 @@ app.use(express.static("dist"))
 app.use(express.json())
 app.use(authorizeUser)
 
-app.post("/users", async (req, res) => {
+app.post("/api/users", async (req, res) => {
   const { username, email, password } = req.body.user
   console.log(req.body)
   const user = new User({ username, email, password })
@@ -38,7 +38,8 @@ app.post("/users", async (req, res) => {
   })
 })
 
-app.post("/users/login", async (req, res) => {
+
+app.post("/api/users/login", async (req, res) => {
   const { email, password } = req.body.user
   const user = await User.login(email, password)
   if (user) {
@@ -61,7 +62,8 @@ app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"))
 })
 
-app.get("/user", async (req, res) => {
+
+app.get("/api/user", async (req, res) => {
   const user = req.user
   const { userId } = user
   const databaseUser = await User.findOne({ _id: userId })
