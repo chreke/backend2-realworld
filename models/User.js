@@ -1,14 +1,32 @@
-const mongoose = require("mongoose")
-const passportLocalMongoose = require("passport-local-mongoose");
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
+const userSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  email: {
+    type: String,
+    unique: true,
+    required: true,
+  },
 
-const UserSchema = new mongoose.Schema({
-    username: {type: String, unique: true, required: true},
-    email: String,
-})
+  password: {
+    type: String,
+    required: true,
+  },
+});
 
-UserSchema.plugin(passportLocalMongoose)
+userSchema.pre("save", async function (next) {
+  if (this.modifiedPaths().includes("password")) {
+    const hash = await bcrypt.hash(this.password, 10);
+    this.password = hash;
+  }
+  next();
+});
 
-const User = mongoose.model("User", UserSchema)
+const User = mongoose.model("User", userSchema);
 
-exports.User = User
+exports.User = User;
