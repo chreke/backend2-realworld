@@ -7,16 +7,19 @@ const userSchema = new mongoose.Schema({
         trim: true,
         unique: true,
         required: true,
+        // default: "no email given",
     },
     username: {
         type: String,
         trim: true,
         required: true,
         unique: true,
+        // default: "no username given",
     },
     password: {
         type: String,
         required: true,
+        // default: "no password given",
     },
     bio: {
         type: String,
