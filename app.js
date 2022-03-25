@@ -38,6 +38,7 @@ app.post("/api/users", async (req, res) => {
   })
 })
 
+
 app.post("/api/users/login", async (req, res) => {
   const { email, password } = req.body.user
   const user = await User.login(email, password)
@@ -60,6 +61,7 @@ app.post("/api/users/login", async (req, res) => {
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"))
 })
+
 
 app.get("/api/user", async (req, res) => {
   const user = req.user
