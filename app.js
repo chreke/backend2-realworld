@@ -34,26 +34,31 @@ app.post("/api/users", async (req, res) => {
   const { username, email, password } = req.body.user
   const user = new User({ username, email, password })
   const createdUser = await user.save()
+  const token = createUserToken(createdUser)
 
   res.json({
     user: {
       username: createdUser.username,
       email: createdUser.email,
+      token,
     },
   })
 })
 
+const createUserToken = (user) => {
+  const userId = user._id.toString()
+  return (token = jwt.sign(
+    { userId, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: "24 h", subject: userId }
+  ))
+}
 
 app.post("/api/users/login", async (req, res) => {
   const { email, password } = req.body.user
   const user = await User.login(email, password)
   if (user) {
-    const userId = user._id.toString()
-    const token = jwt.sign(
-      { userId, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "24 h", subject: userId }
-    )
+    const token = createUserToken(user)
     return res.json({
       user: { token, email: user.email, username: user.username },
     })
@@ -65,7 +70,6 @@ app.post("/api/users/login", async (req, res) => {
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"))
 })
-
 
 app.get("/api/user", async (req, res) => {
   const user = req.user
