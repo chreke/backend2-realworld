@@ -1,11 +1,13 @@
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
-const { use } = require("bcrypt/promises")
+
 
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true, select: false },
+  Biografi:{type:String,default:" "},
+  Profilbild:{type:String,default:"https://i.stack.imgur.com/34AD2.jpg"}
 })
 
 userSchema.pre("save", async function (next) {
@@ -21,7 +23,7 @@ userSchema.statics.login = async function (email, password) {
     return user
   } else {
     return null
-  }
+  } 
 }
 
 const User = mongoose.model("User", userSchema)
