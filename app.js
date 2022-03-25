@@ -3,6 +3,9 @@ const path = require("path")
 const mongoose = require("mongoose")
 const { User } = require("./models/user")
 const dotenv = require("dotenv")
+const articlesRouter = require("./routers/articles")
+const tagsRouter = require("./routers/tags")
+
 dotenv.config()
 
 const app = express()
@@ -24,9 +27,11 @@ app.use(express.static("dist"))
 app.use(express.json())
 app.use(authorizeUser)
 
+app.use("/api/articles", articlesRouter)
+app.use("/api/tags", tagsRouter)
+
 app.post("/api/users", async (req, res) => {
   const { username, email, password } = req.body.user
-  console.log(req.body)
   const user = new User({ username, email, password })
   const createdUser = await user.save()
 
@@ -44,7 +49,6 @@ app.post("/api/users/login", async (req, res) => {
   const user = await User.login(email, password)
   if (user) {
     const userId = user._id.toString()
-    console.log(userId)
     const token = jwt.sign(
       { userId, email: user.email },
       process.env.JWT_SECRET,
@@ -67,7 +71,6 @@ app.get("/api/user", async (req, res) => {
   const user = req.user
   const { userId } = user
   const databaseUser = await User.findOne({ _id: userId })
-  console.log(databaseUser)
   res.json({
     user: {
       email: user.email,
