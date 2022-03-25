@@ -65,8 +65,6 @@ app.put("/user", async (req, res) => {
     catch(err){
       console.log(err)
     }
-        // await User.updateOne({email: req.body.user.email}, {$set: {username: req.body.user.username}})
-    
 })
 
 mongoose.connect("mongodb://localhost/realworld");
