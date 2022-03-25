@@ -84,6 +84,19 @@ app.get("/api/user", async (req, res) => {
   })
 })
 
+app.get('/api/profiles/:username',async (req,res)=>{
+  const user=req.user;
+  console.log(user);
+  const findUser= await User.findOne({_id:user.userId});
+  console.log(findUser);
+  res.json({
+    profile:
+    {username:findUser.username,
+    image:findUser.Profilbild,
+    bio:findUser.Biografi
+    }})
+})
+
 mongoose.connect(`mongodb://localhost/realworld`)
 
 app.listen(PORT, () => {
