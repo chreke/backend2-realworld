@@ -1,5 +1,7 @@
 const express = require("express");
 const path = require("path");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv").config();
 
 const { User } = require("./models/User");
 const mongoose = require("mongoose");
@@ -28,6 +30,26 @@ app.post("/users", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(400).json({ message: "Problem to register" });
+  }
+});
+
+app.post("/users/login", async (req, res) => {
+  const { email, password } = req.body.user;
+  console.log(req.body);
+  const user = await User.login(email, password);
+  if (user) {
+    const userId = user._id.toString();
+    const token = jwt.sign(
+      { userId, email: user.email },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "60h",
+        subject: userId,
+      }
+    );
+    res.json({ token });
+  } else {
+    res.sendStatus(401);
   }
 });
 
