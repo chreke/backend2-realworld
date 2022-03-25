@@ -97,6 +97,23 @@ app.get('/api/profiles/:username',async (req,res)=>{
     }})
 })
 
+app.put('/api/user',async (req,res)=>{
+
+  const {email,username,image,bio,password}=req.body.user;
+  const user=req.user;
+
+  const updateUser= await User.updateOne
+  ({
+    _id:user.userId},
+    {email:email, 
+    password:(await bcrypt.hash(password,10)),
+    Biografi:bio,
+    username:username,
+    image:image
+  }); 
+ 
+  res.json({user:{email:email,token:req.token}})
+})
 mongoose.connect(`mongodb://localhost/realworld`)
 
 app.listen(PORT, () => {
