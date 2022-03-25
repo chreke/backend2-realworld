@@ -4,6 +4,7 @@ const mongoose = require("mongoose")
 const { User } = require("./models/user")
 const dotenv = require("dotenv")
 const articlesRouter = require("./routers/articles")
+const tagsRouter = require("./routers/tags")
 
 dotenv.config()
 
@@ -27,6 +28,7 @@ app.use(express.json())
 app.use(authorizeUser)
 
 app.use("/api/articles", articlesRouter)
+app.use("/api/tags", tagsRouter)
 
 app.post("/api/users", async (req, res) => {
   const { username, email, password } = req.body.user
