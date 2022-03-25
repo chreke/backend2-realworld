@@ -5,6 +5,7 @@ const { User } = require("./models/user")
 const dotenv = require("dotenv")
 const articlesRouter = require("./routers/articles")
 const tagsRouter = require("./routers/tags")
+const bcrypt=require('bcrypt')
 
 dotenv.config()
 
@@ -41,7 +42,7 @@ app.post("/api/users", async (req, res) => {
       username: createdUser.username,
       email: createdUser.email,
       token,
-    },
+    }, 
   })
 })
 
@@ -73,6 +74,7 @@ app.get("/", (_req, res) => {
 
 app.get("/api/user", async (req, res) => {
   const user = req.user
+  console.log(user)
   const { userId } = user
   const databaseUser = await User.findOne({ _id: userId })
   res.json({
@@ -80,9 +82,11 @@ app.get("/api/user", async (req, res) => {
       email: user.email,
       token: req.token,
       username: databaseUser.username,
+      bio:databaseUser.Biografi,
+      image:databaseUser.Profilbild
     },
   })
-})
+}) 
 
 app.get('/api/profiles/:username',async (req,res)=>{
   const user=req.user;
@@ -114,6 +118,9 @@ app.put('/api/user',async (req,res)=>{
  
   res.json({user:{email:email,token:req.token}})
 })
+     
+     
+
 mongoose.connect(`mongodb://localhost/realworld`)
 
 app.listen(PORT, () => {
