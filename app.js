@@ -33,6 +33,8 @@ app.post("/users", async (req, res) => {
   }
 });
 
+const JWT_SECRET = "asdasdasdnjsadnnsaj12313"
+
 app.post("/users/login", async (req, res) => {
   const { email, password } = req.body.user;
   console.log(req.body);
@@ -41,7 +43,7 @@ app.post("/users/login", async (req, res) => {
     const userId = user._id.toString();
     const token = jwt.sign(
       { userId, email: user.email },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       {
         expiresIn: "60h",
         subject: userId,
@@ -52,6 +54,20 @@ app.post("/users/login", async (req, res) => {
     res.sendStatus(401);
   }
 });
+
+app.put("/user", async (req, res) => {
+    console.log(req.body)
+    const {email, username} = req.body.user
+    try{
+      await User.updateOne({email: email}, {$set: {username: username}})
+      res.status(201).json({username})
+    }
+    catch(err){
+      console.log(err)
+    }
+        // await User.updateOne({email: req.body.user.email}, {$set: {username: req.body.user.username}})
+    
+})
 
 mongoose.connect("mongodb://localhost/realworld");
 app.listen(PORT, () => {
