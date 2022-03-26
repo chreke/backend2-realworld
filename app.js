@@ -5,7 +5,7 @@ const { User } = require("./models/user")
 const dotenv = require("dotenv")
 const articlesRouter = require("./routers/articles")
 const tagsRouter = require("./routers/tags")
-const bcrypt=require('bcrypt')
+const bcrypt = require("bcrypt")
 
 dotenv.config()
 
@@ -42,7 +42,9 @@ app.post("/api/users", async (req, res) => {
       username: createdUser.username,
       email: createdUser.email,
       token,
-    }, 
+      bio: createdUser.Biografi,
+      image: createdUser.Profilbild,
+    },
   })
 })
 
@@ -61,7 +63,13 @@ app.post("/api/users/login", async (req, res) => {
   if (user) {
     const token = createUserToken(user)
     return res.json({
-      user: { token, email: user.email, username: user.username },
+      user: {
+        token,
+        email: user.email,
+        username: user.username,
+        bio: user.Biografi,
+        image: user.Profilbild,
+      },
     })
   } else {
     res.sendStatus(401)
@@ -82,44 +90,45 @@ app.get("/api/user", async (req, res) => {
       email: user.email,
       token: req.token,
       username: databaseUser.username,
-      bio:databaseUser.Biografi,
-      image:databaseUser.Profilbild
+      bio: databaseUser.Biografi,
+      image: databaseUser.Profilbild,
     },
   })
-}) 
+})
 
-app.get('/api/profiles/:username',async (req,res)=>{
-  const user=req.user;
-  console.log(user);
-  const findUser= await User.findOne({_id:user.userId});
-  console.log(findUser);
+app.get("/api/profiles/:username", async (req, res) => {
+  const user = req.user
+  console.log(user)
+  const findUser = await User.findOne({ _id: user.userId })
+  console.log(findUser)
   res.json({
-    profile:
-    {username:findUser.username,
-    image:findUser.Profilbild,
-    bio:findUser.Biografi
-    }})
+    profile: {
+      username: findUser.username,
+      image: findUser.Profilbild,
+      bio: findUser.Biografi,
+    },
+  })
 })
 
-app.put('/api/user',async (req,res)=>{
+app.put("/api/user", async (req, res) => {
+  const { email, username, image, bio, password } = req.body.user
+  const user = req.user
 
-  const {email,username,image,bio,password}=req.body.user;
-  const user=req.user;
+  const updateUser = await User.updateOne(
+    {
+      _id: user.userId,
+    },
+    {
+      email: email,
+      password: await bcrypt.hash(password, 10),
+      Biografi: bio,
+      username: username,
+      Profilbild: image,
+    }
+  )
 
-  const updateUser= await User.updateOne
-  ({
-    _id:user.userId},
-    {email:email, 
-    password:(await bcrypt.hash(password,10)),
-    Biografi:bio,
-    username:username,
-    image:image
-  }); 
- 
-  res.json({user:{email:email,token:req.token}})
+  res.json({ user: { email: email, token: req.token } })
 })
-     
-     
 
 mongoose.connect(`mongodb://localhost/realworld`)
 
