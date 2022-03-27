@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
     },
     bio: {
         type: String,
+        default: "Enter bio",
     },
     image: {
         type: String,
