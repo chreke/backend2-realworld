@@ -4,7 +4,6 @@ const path = require("path");
 const app = express()
 const PORT = 3000;
 
-// hej
 
 app.use(express.static("dist"));
 
@@ -15,3 +14,4 @@ app.get("/", (_req, res) => {
 app.listen(PORT, () => {
   console.log(`Started Express server on port ${PORT}`);
 });
+
