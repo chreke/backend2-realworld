@@ -1,10 +1,12 @@
+const dotenv = require("dotenv")
+dotenv.config()
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose")
 
 const PORT = 3000;
 
-mongoose.connect("mongodb://127.0.0.1/real-world")
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     const app = express()
 
