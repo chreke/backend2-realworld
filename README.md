@@ -29,4 +29,20 @@ npx newman run api/RealWorld.postman_collection.json \
 
 Det finns även ett shell-script som kör alla tester: [run-api-tests.sh](api/run-api-tests.sh)
 
+För att köra scriptet (i MacOS/Linux):
+
+```sh
+cd api
+./run-api-tests.sh
+```
+
+Som standard kommer scriptet att gå mot RealWorld-demo-API:t, så då bör alla
+tester passera. När ni ska köra mot er egen server (givet att den är igång på
+port 3000) kör ni scriptet så här:
+
+```sh
+APIURL=http://localhost:3000 ./run-api-tests.sh
+```
+
+
 Scriptet skapar automatiskt nya värden för `USERNAME` och `EMAIL`, vilket gör det lättare att köra upprepade gånger.
