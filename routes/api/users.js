@@ -95,9 +95,19 @@ route.post('/login', async (req, res) => {
         });
         return;
     }
-    res.json({
-        message: "Login succesfull",
-    });
+    console.log(req.body)
+    const user = {
+        email: loggedInUser.email,
+        username: loggedInUser.username,
+        bio: loggedInUser.bio,
+        image: loggedInUser.image,
+        token: loggedInUser.token,
+    }
+    res.json({ user: user });
+    console.log(user)
+    // res.json({
+    //     message: "Login succesfull",
+    // });
     
     // res.send(`Password: ${password} Password: ${email}`);
     
