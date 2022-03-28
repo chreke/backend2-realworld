@@ -6,6 +6,12 @@ Projektet innehåller en server som levererar frontenden för er uppgift, samt e
 
 Starta servern genom att köra kommandot `node app.js` - ni bör nu kunna komma åt ett färdigt frontend på http://localhost:3000
 
+Kör `npm start`
+
+## Test
+
+Kör test genom att köra kommandot `npm test` - Servern behöver vara igång `npm start`
+
 ## Postman
 
 Projektet innehåller även en [Postman-collection](api/RealWorld.postman_collection.json) som ni kan använda för att
