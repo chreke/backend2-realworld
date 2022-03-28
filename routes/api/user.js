@@ -2,16 +2,18 @@ const { Router } = require("express");
 
 const route = Router();
 
-route.get("/", (req, res) => {
-    
-    // Checked if "http://localhost:3000/api/user" route establed. It did!
+// GET CURRENT USER - Fake response - it works (but in route http://localhost:3000/api/user/ NOT http://localhost:3000/user/)
+
+route.get("/", (req, res) => {    
     res.send({
         "user": {
             "email": "panos@panos.panos",
-            "token": "jwt.token.here",
+            // "email": req.body.user.email,
             "username": "panos",
+            // "username": req.body.user.username,
+            "token": "jwt.token.here",
             "bio": "I am Panos",
-            "image": null,
+            "image": "image",
         }
     })
 })
