@@ -42,8 +42,8 @@ app.post("/api/users", async (req, res) => {
       username: createdUser.username,
       email: createdUser.email,
       token,
-      bio: createdUser.Biografi,
-      image: createdUser.Profilbild,
+      bio: createdUser.bio,
+      image: createdUser.image,
     },
   })
 })
@@ -67,8 +67,8 @@ app.post("/api/users/login", async (req, res) => {
         token,
         email: user.email,
         username: user.username,
-        bio: user.Biografi,
-        image: user.Profilbild,
+        bio: user.bio,
+        image: user.image,
       },
     })
   } else {
@@ -89,8 +89,8 @@ app.get("/api/user", async (req, res) => {
       email: user.email,
       token: req.token,
       username: databaseUser.username,
-      bio: databaseUser.Biografi,
-      image: databaseUser.Profilbild,
+      bio: databaseUser.bio,
+      image: databaseUser.image,
     },
   })
 })
@@ -101,8 +101,8 @@ app.get("/api/profiles/:username", async (req, res) => {
   res.json({
     profile: {
       username: findUser.username,
-      image: findUser.Profilbild,
-      bio: findUser.Biografi,
+      image: findUser.image,
+      bio: findUser.bio,
     },
   })
 })
@@ -116,11 +116,11 @@ app.put("/api/user", async (req, res) => {
       _id: user.userId,
     },
     {
-      email: email,
-      password: password,
-      Biografi: bio,
-      username: username,
-      Profilbild: image,
+      email,
+      password,
+      bio,
+      username,
+      image,
     },
     { returnDocument: "after" }
   )
@@ -129,8 +129,8 @@ app.put("/api/user", async (req, res) => {
     user: {
       email: updatedUser.email,
       username: updatedUser.username,
-      bio: updatedUser.Biografi,
-      image: updatedUser.Profilbild,
+      bio: updatedUser.bio,
+      image: updatedUser.image,
       token: createUserToken(updatedUser),
     },
   })
