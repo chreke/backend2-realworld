@@ -42,8 +42,8 @@ app.post("/api/users", async (req, res) => {
       username: createdUser.username,
       email: createdUser.email,
       token,
-      bio: createdUser.Biografi,
-      image: createdUser.Profilbild,
+      bio: createdUser.bio,
+      image: createdUser.image,
     },
   })
 })
@@ -67,8 +67,8 @@ app.post("/api/users/login", async (req, res) => {
         token,
         email: user.email,
         username: user.username,
-        bio: user.Biografi,
-        image: user.Profilbild,
+        bio: user.bio,
+        image: user.image,
       },
     })
   } else {
@@ -82,7 +82,6 @@ app.get("/", (_req, res) => {
 
 app.get("/api/user", async (req, res) => {
   const user = req.user
-  console.log(user)
   const { userId } = user
   const databaseUser = await User.findOne({ _id: userId })
   res.json({
@@ -90,22 +89,20 @@ app.get("/api/user", async (req, res) => {
       email: user.email,
       token: req.token,
       username: databaseUser.username,
-      bio: databaseUser.Biografi,
-      image: databaseUser.Profilbild,
+      bio: databaseUser.bio,
+      image: databaseUser.image,
     },
   })
 })
 
 app.get("/api/profiles/:username", async (req, res) => {
   const user = req.user
-  console.log(user)
   const findUser = await User.findOne({ _id: user.userId })
-  console.log(findUser)
   res.json({
     profile: {
       username: findUser.username,
-      image: findUser.Profilbild,
-      bio: findUser.Biografi,
+      image: findUser.image,
+      bio: findUser.bio,
     },
   })
 })
@@ -114,20 +111,29 @@ app.put("/api/user", async (req, res) => {
   const { email, username, image, bio, password } = req.body.user
   const user = req.user
 
-  const updateUser = await User.updateOne(
+  const updatedUser = await User.findOneAndUpdate(
     {
       _id: user.userId,
     },
     {
-      email: email,
-      password: await bcrypt.hash(password, 10),
-      Biografi: bio,
-      username: username,
-      Profilbild: image,
-    }
+      email,
+      password,
+      bio,
+      username,
+      image,
+    },
+    { returnDocument: "after" }
   )
 
-  res.json({ user: { email: email, token: req.token } })
+  res.json({
+    user: {
+      email: updatedUser.email,
+      username: updatedUser.username,
+      bio: updatedUser.bio,
+      image: updatedUser.image,
+      token: createUserToken(updatedUser),
+    },
+  })
 })
 
 mongoose.connect(`mongodb://localhost/realworld`)

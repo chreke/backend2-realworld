@@ -1,18 +1,25 @@
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 
-
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true, select: false },
-  Biografi:{type:String,default:" "},
-  Profilbild:{type:String,default:"https://i.stack.imgur.com/34AD2.jpg"}
+  bio: { type: String, default: " " },
+  image: { type: String, default: "https://i.stack.imgur.com/34AD2.jpg" },
 })
 
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 10)
+  }
+  next()
+})
+
+userSchema.pre("findOneAndUpdate", async function (next) {
+  const valuesToUpdate = this.getUpdate()
+  if (valuesToUpdate.password) {
+    valuesToUpdate.password = await bcrypt.hash(valuesToUpdate.password, 10)
   }
   next()
 })
@@ -23,7 +30,7 @@ userSchema.statics.login = async function (email, password) {
     return user
   } else {
     return null
-  } 
+  }
 }
 
 const User = mongoose.model("User", userSchema)
