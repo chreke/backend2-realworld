@@ -82,7 +82,6 @@ app.get("/", (_req, res) => {
 
 app.get("/api/user", async (req, res) => {
   const user = req.user
-  console.log(user)
   const { userId } = user
   const databaseUser = await User.findOne({ _id: userId })
   res.json({
@@ -98,9 +97,7 @@ app.get("/api/user", async (req, res) => {
 
 app.get("/api/profiles/:username", async (req, res) => {
   const user = req.user
-  console.log(user)
   const findUser = await User.findOne({ _id: user.userId })
-  console.log(findUser)
   res.json({
     profile: {
       username: findUser.username,
@@ -114,20 +111,29 @@ app.put("/api/user", async (req, res) => {
   const { email, username, image, bio, password } = req.body.user
   const user = req.user
 
-  const updateUser = await User.updateOne(
+  const updatedUser = await User.findOneAndUpdate(
     {
       _id: user.userId,
     },
     {
       email: email,
-      password: await bcrypt.hash(password, 10),
+      password: password,
       Biografi: bio,
       username: username,
       Profilbild: image,
-    }
+    },
+    { returnDocument: "after" }
   )
 
-  res.json({ user: { email: email, token: req.token } })
+  res.json({
+    user: {
+      email: updatedUser.email,
+      username: updatedUser.username,
+      bio: updatedUser.Biografi,
+      image: updatedUser.Profilbild,
+      token: createUserToken(updatedUser),
+    },
+  })
 })
 
 mongoose.connect(`mongodb://localhost/realworld`)
