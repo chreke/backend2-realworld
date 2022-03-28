@@ -17,8 +17,8 @@ mongoose.connect("mongodb+srv://panos:123@realworld-gruppuppgift.qxob6.mongodb.n
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-// Routes
-app.use("/api", require("./routes/api"));
+// ROUTES
+app.use("/", require("./routes/api"));
 
 
 app.use(express.static("dist"));
