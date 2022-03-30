@@ -18,7 +18,7 @@ module.exports = {
         const username = req.body.user.username
         const email = req.body.user.email
 
-        const user = getUserByUsername(username)
+        const user = await getUserByUsername(username)
 
         if (user) {
             if (username.toLowerCase() === user.username) {
