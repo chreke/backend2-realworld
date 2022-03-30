@@ -4,12 +4,12 @@ const dotenv = require("dotenv").config();
 const path = require("path");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
+const login = require("./routes/login")
 
 const { User } = require("./models/user");
 
 const app = express();
 const PORT = 3000;
-
 app.use(cors());
 app.use(express.json());
 
@@ -23,20 +23,18 @@ const MONGODB_URI = process.env.MONGODB_URI;
 app.use(express.static("dist"));
 
 app.post("/users", async (req, res) => {
-  const { username, password, email } = req.body.user;
-  // const bio = "";
-  // const image = "";
-  // const token = "";
+  const { username, password, email } = req.body.user;   
   const user = new User({ username, password, email });
   await user.save();
   console.log("username: ", username, "password: ", password, "email: ", email);
   console.log(req.body);
   res.send(req.body);
 });
+app.get("users", async (req, res) => {
+  const user = User.find({})
+})
 
-//{"user":{"email":"{{EMAIL}}", "password":"{{PASSWORD}}", "username":"{{USERNAME}}"}}
-
-app.post("/users/login", async (req, res) => {});
+app.use("/", login)
 
 mongoose.connect(MONGODB_URI);
 
