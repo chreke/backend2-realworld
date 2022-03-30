@@ -2,16 +2,17 @@ const mongoose = require("mongoose")
 const bcrypt = require("bcryptjs")
 
 const userSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
+    username: { type: String, required: true, unique: true, lowercase: true },
+    email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true },
     biography: String,
     imageUrl: String
 })
 
-userSchema.pre("save", async () => {
-    if (this.isModified("password")) {
-        this.password = await bcrypt.hash(this.password, 10)
+userSchema.pre("save", async function(next) {
+    if (this.password && this.modifiedPaths().includes("password")) {
+        const hash = await bcrypt.hash(this.password, 10)
+        this.password = hash
     }
     next()
 })
@@ -24,4 +25,9 @@ const createUser = async (userData) => {
     return user
 }
 
-module.exports = { createUser }
+const getUserByUsername = async (username) => {
+    const user = await User.findOne({ username })
+    return user
+}
+
+module.exports = { createUser, getUserByUsername }
