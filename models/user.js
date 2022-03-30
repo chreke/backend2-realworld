@@ -11,21 +11,20 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", async function (next) {
+  user = this
   if (this.modifiedPaths().includes("password")) {
     const hash = await bcrypt.hash(this.password, 10);
     this.password = hash;
-  }
+  } 
   next();
 });
 
-userSchema.statics.login = async function (username, password) {
-  const user = await this.findOne({ username });
+userSchema.statics.login = async function (email, password) {
+  const user = await User.findOne({ email });
   if (user && (await bcrypt.compare(password, user.password))) {
     return user;
-  }
+  } 
   return null;
 };
-
 const User = mongoose.model("User", userSchema);
-
 exports.User = User;
