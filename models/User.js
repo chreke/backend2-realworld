@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -8,4 +8,16 @@ const userSchema = mongoose.Schema({
     imageUrl: String
 })
 
-module.exports = mongoose.Model("User", userSchema)
+userSchema.pre("save", async () => {
+
+})
+
+const User = mongoose.model("User", userSchema)
+
+const createUser = async (userData) => {
+    const user = new User(userData)
+    await user.save()
+    return user
+}
+
+module.exports = { createUser }
