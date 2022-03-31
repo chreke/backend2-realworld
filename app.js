@@ -6,13 +6,17 @@ const PORT = 3000;
 
 app.use(express.static("dist"));
 
+//COMMENT
+
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
-//COMMENT213
+//COMMENT
 
 //FFSFSFasdasda
+
+//GIT ADD
 
 app.listen(PORT, () => {
   console.log(`Started Express server on port ${PORT}`);
