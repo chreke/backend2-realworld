@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 // const bodyParser = require("body-parser");
 
 const { User } = require("./models/user");
+const { Article } = require("./models/article")
 
 const app = express();
 const PORT = 3000;
@@ -64,6 +65,24 @@ app.post("/api/users/login", async (req, res) => {
 app.get("/api/articles", async (req, res) => {
   res.send("HELLO")
 })
+
+
+app.post("/api/articles", async (req, res) => {
+  const { title, description, body } = req.body.article
+  const user = req.user
+  const article = new Article({ title, description, body })
+  await article.save()
+
+  console.log(user)
+  console.log(article)
+
+  if(user) {
+    res.json({ article })
+  } else {
+    res.sendStatus(401)
+  }
+})
+
 
 mongoose.connect("mongodb://localhost/backend2_GroupProject");
 
