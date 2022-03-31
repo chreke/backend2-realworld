@@ -17,22 +17,12 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
   bio: {
-<<<<<<< HEAD
     type: String
   },  
   image: {
     type: String, 
     default: "/images/profilePic.jpg"
   },
-=======
-    type: String, 
-    
-  },
-  image: {
-    type: String,
-    default:"kalleking"
-  }
->>>>>>> 1c8064f97959773ed4dba8e8b3a3edcd2948a982
 });
 userSchema.pre('save', async function (next) {
   const hash = await bcrypt.hash(this.password, 10);
