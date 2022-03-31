@@ -26,6 +26,14 @@ app.use((req, res, next) => {
   next();
 });
 
+const requireLogin = (req, res, next) => {
+  if (req.user) {
+    console.log("Logged In")
+    next()
+  } else {
+    res.sendStatus(401);
+  }
+};
 
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
@@ -33,26 +41,27 @@ app.get("/", (_req, res) => {
 
 app.post("/api/users", async (req, res) => {
 
-  const bio = "";
-  const image = null;
   const { email, password, username } = req.body.user;
+  let user = new User({ email, password, username });
 
-  const token = jwt.sign(
-    { username: username },
-    JWTSECRET,
-    { expiresIn: "1 h", subject: username }
-  );
-  const user = new User({ email, password, username, bio, image, token });
   try {
     await user.save();
-    console.log({ user });
+    const userId = user._id.toString();
+    const token = jwt.sign(
+      { userId, username: username },
+      JWTSECRET,
+      { expiresIn: "1 h", subject: userId }
+    );
+    console.log(token);
+    await User.updateOne({ username: username }, { token: token })
+    user = ({ email, password, username, token })
     res.json({ user });
   } catch (err) {
     console.log(err);
   }
 });
 
-app.post("/api/users/login", async (req, res) => {
+app.post("/api/users/login", requireLogin, async (req, res) => {
   const { email, password } = req.body.user;
   const user = await User.login(email, password);
   if (user) {
@@ -63,20 +72,22 @@ app.post("/api/users/login", async (req, res) => {
 });
 
 app.get("/api/articles", async (req, res) => {
-  res.send("HELLO")
-})
+  const articles = await Article
+    .find({})
+    .populate("author")
+    .exec();
+  //console.log({ articles });
+  res.json({ articles });
+});
 
 
 app.post("/api/articles", async (req, res) => {
   const { title, description, body } = req.body.article
   const user = req.user
+  console.log(user);
   const article = new Article({ title, description, body })
   await article.save()
-
-  console.log(user)
-  console.log(article)
-
-  if(user) {
+  if (user) {
     res.json({ article })
   } else {
     res.sendStatus(401)
