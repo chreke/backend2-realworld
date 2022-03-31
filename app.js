@@ -35,11 +35,19 @@ app.post("/api/users", async (req, res) => {
   // console.log(req.body);
   // const newUser = req.body;
   // console.log(newUser.user.email);
+  const bio = "";
+  const image = null;
   const { email, password, username } = req.body.user;
-  console.log(email)
-  const user = new User({ email, password, username });
+  // const userId = user._id.toString();
+  const token = jwt.sign(
+    { username: username },
+    JWTSECRET,
+    { expiresIn: "1 h", subject: username }
+  );
+  const user = new User({ email, password, username, bio, image, token });
   try {
     await user.save();
+    console.log(user);
     res.json({ user });
   } catch (err) {
     console.log(err);
