@@ -10,7 +10,7 @@ const generateToken = (id) => {
 
 //register user
 const registerUser = asyncHandler(async (req, res) => {
-  const { username, password, email } = req.body.user;
+  const { username, password, email,  } = req.body.user;
 
   const userExists = await User.findOne({ username });
   if (userExists) {
@@ -22,6 +22,9 @@ const registerUser = asyncHandler(async (req, res) => {
     username: username,
     password: password,
     email: email,
+    bio: "",
+    
+    
   });
 
   const newUser = await user.save();
@@ -34,6 +37,9 @@ const registerUser = asyncHandler(async (req, res) => {
       username: newUser.username,
       password: newUser.password,
       email: newUser.email,
+      bio: "",
+      
+
       token: token,
     },
   });
