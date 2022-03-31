@@ -13,7 +13,7 @@ app.get("/", (_req, res) => {
 });
 
 //COMMENT
-
+// Zamirs kommentar
 //FFSFSFasdasda
 
 //GIT ADDasdasdasdas
