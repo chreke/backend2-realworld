@@ -6,6 +6,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   token: { type: String },
+  bio: { type: String },
+  image: { type: String }
 });
 
 userSchema.pre(
