@@ -30,15 +30,12 @@ app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
-
 app.post("/api/users", async (req, res) => {
-  // console.log(req.body);
-  // const newUser = req.body;
-  // console.log(newUser.user.email);
+
   const bio = "";
   const image = null;
   const { email, password, username } = req.body.user;
-  // const userId = user._id.toString();
+
   const token = jwt.sign(
     { username: username },
     JWTSECRET,
@@ -47,10 +44,20 @@ app.post("/api/users", async (req, res) => {
   const user = new User({ email, password, username, bio, image, token });
   try {
     await user.save();
-    console.log(user);
+    console.log({ user });
     res.json({ user });
   } catch (err) {
     console.log(err);
+  }
+});
+
+app.post("/api/users/login", async (req, res) => {
+  const { email, password } = req.body.user;
+  const user = await User.login(email, password);
+  if (user) {
+    res.json({ user });
+  } else {
+    res.sendStatus(401);
   }
 });
 
