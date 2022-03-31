@@ -10,7 +10,7 @@ const articleSchema = new mongoose.Schema(
         createdAt: { type: Date, default: Date.now },
         updatedAt: { type: Date, default: Date.now },
         favorited: { type: Boolean, default: false },
-        favoritesCount: { type: String },
+        favoritesCount: { type: Number, default: 0 },
         author: { type: mongoose.Schema.ObjectId, ref: "User" }
     })
 
