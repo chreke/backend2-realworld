@@ -53,14 +53,16 @@ app.post("/users/login", async (req, res) => {
   } else {
     res.sendStatus(401);
   }
+  
 });
 
 app.put("/user", async (req, res) => {
-    console.log(req.body)
-    const {email, username} = req.body.user
+    console.log(req.body.user)
+    console.log(req.user.userId)
+    const {email, username, bio} = req.body.user
     try{
-      await User.updateOne({email: email}, {$set: {username: username}})
-      res.status(201).json({username})
+      await User.updateOne({email: email}, {$set: {username: username, bio: bio, email: email}})
+      res.status(201).json({username, email})
     }
     catch(err){
       console.log(err)
