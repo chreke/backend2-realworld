@@ -61,6 +61,10 @@ app.post("/api/users/login", async (req, res) => {
   }
 });
 
+app.get("/api/articles", async (req, res) => {
+  res.send("HELLO")
+})
+
 mongoose.connect("mongodb://localhost/backend2_GroupProject");
 
 app.listen(PORT, () => {
