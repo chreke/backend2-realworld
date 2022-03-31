@@ -17,6 +17,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  bio: {
+    type: String,
+    default: ""
+  },
+  profilePicture: {
+    type: String, default: "https://upload.wikimedia.org/wikipedia/commons/7/72/Default-welcomer.png" 
+  }
 });
 
 userSchema.pre("save", async function (next) {
