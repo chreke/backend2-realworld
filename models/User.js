@@ -16,6 +16,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  bio: {
+    type: String, 
+    
+  },
+  image: {
+    type: String,
+    default:"kalleking"
+  }
 });
 userSchema.pre('save', async function (next) {
   const hash = await bcrypt.hash(this.password, 10);
