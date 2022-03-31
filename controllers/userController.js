@@ -22,6 +22,8 @@ const registerUser = asyncHandler(async (req, res) => {
     username: username,
     password: password,
     email: email,
+    bio: "",
+    image
   });
 
   const newUser = await user.save();
@@ -34,6 +36,8 @@ const registerUser = asyncHandler(async (req, res) => {
       username: newUser.username,
       password: newUser.password,
       email: newUser.email,
+      bio: "",
+      image,
       token: token,
     },
   });
