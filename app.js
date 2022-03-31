@@ -4,11 +4,11 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv").config();
 
 const { User } = require("./models/User");
-// const { Article } = require("./models/Article");
+const { Article } = require("./models/Article");
 const mongoose = require("mongoose");
 
 const app = express();
-const PORT = 3000;
+const PORT = 8000;
 
 app.use(express.json());
 app.use(express.static("dist"));
@@ -33,7 +33,7 @@ app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
-app.post("/users", async (req, res) => {
+app.post("/api/users", async (req, res) => {
   console.log(req.body);
   const { username, email, password } = req.body.user;
   console.log("username", username);
@@ -50,9 +50,7 @@ app.post("/users", async (req, res) => {
   }
 });
 
-
-
-app.post("/users/login", async (req, res) => {
+app.post("/api/users/login", async (req, res) => {
   const { email, password } = req.body.user;
   console.log(req.body);
   const user = await User.login(email, password);
@@ -70,7 +68,6 @@ app.post("/users/login", async (req, res) => {
   } else {
     res.sendStatus(401);
   }
-  
 });
 
 app.get("/user", requireLogin, async (req, res) => {
@@ -78,36 +75,43 @@ app.get("/user", requireLogin, async (req, res) => {
   res.json(user);
 });
 
-app.put("/user", requireLogin, async (req, res) => {
-    console.log(req.body.user)
-    console.log(req.user.userId)
-    const {email, username, bio} = req.body.user
-    try{
-      await User.updateOne({_id: req.user.userId}, {$set: {username: username, bio: bio, email: email, profilePicture: profilePicture}})
-      res.status(201).json({username, email})
-    }
-    catch(err){
-      console.log(err)
-    }
-})
+app.put("/api/user", requireLogin, async (req, res) => {
+  console.log(req.body.user);
+  console.log(req.user.userId);
+  const { email, username, bio } = req.body.user;
+  try {
+    await User.updateOne(
+      { _id: req.user.userId },
+      {
+        $set: {
+          username: username,
+          bio: bio,
+          email: email,
+          profilePicture: profilePicture,
+        },
+      }
+    );
+    res.status(201).json({ username, email });
+  } catch (err) {
+    console.log(err);
+  }
+});
 
-
-// app.post("/articles", async (req, res) => {
-//   const { title, description, body, tagList } = req.body.article;
-//   console.log(req.body);
-//   try {
-//     const article = await Article.create({
-//       title: title,
-//       description: description,
-//       body: body,
-//       tagList: tagList,
-//     });
-//     res.status(201).json({ article });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(400);
-//   }
-// });
+app.post("/api/articles", async (req, res) => {
+  const { title, description, body, tagList } = req.body.article;
+  try {
+    const article = await Article.create({
+      title: title,
+      description: description,
+      body: body,
+      tagList: tagList,
+    });
+    res.status(201).json({ article });
+  } catch (err) {
+    console.log(err);
+    res.status(400);
+  }
+});
 
 mongoose.connect("mongodb://localhost/realworld");
 app.listen(PORT, () => {
