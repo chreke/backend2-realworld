@@ -23,7 +23,8 @@ const registerUser = asyncHandler(async (req, res) => {
     password: password,
     email: email,
     bio: "",
-    image
+    
+    
   });
 
   const newUser = await user.save();
@@ -37,7 +38,8 @@ const registerUser = asyncHandler(async (req, res) => {
       password: newUser.password,
       email: newUser.email,
       bio: "",
-      image,
+      
+      
       token: token,
     },
   });
