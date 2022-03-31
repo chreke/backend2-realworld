@@ -57,10 +57,14 @@ router.get("/", async (req, res) => {
     query.tagList = tag._id
   }
 
+  if (typeof req.query.favorited !== "undefined") {
+    const user = await User.findOne({ username: req.query.favorited })
+    query.favoritedBy = user._id
+  }
+
   const author = await User.findOne({ username: req.query.author })
 
   if (author === null && req.query.author) {
-    console.log("No author")
     return res.json({ articles: [], articlesCount: 0 })
   } else if (author) {
     query.author = author._id
@@ -79,6 +83,7 @@ router.get("/", async (req, res) => {
     const processedArticle = {
       ...article.toObject(),
       tagList: article.tagList.map((tag) => tag.name).sort(),
+      favorited: article.favoritedBy.includes(req.user?.userId),
     }
     return processedArticle
   })
@@ -86,6 +91,36 @@ router.get("/", async (req, res) => {
   res.json({
     articles: processedArticles,
     articlesCount: articlesCount,
+  })
+})
+
+router.post("/:slug/favorite", async (req, res) => {
+  const { slug } = req.params
+  const article = await Article.findOneAndUpdate(
+    { slug },
+    { $addToSet: { favoritedBy: mongoose.Types.ObjectId(req.user.userId) } },
+    { returnDocument: "after" }
+  )
+  res.json({
+    article: {
+      ...article.toObject(),
+      favorited: true,
+    },
+  })
+})
+
+router.delete("/:slug/favorite", async (req, res) => {
+  const { slug } = req.params
+  const article = await Article.findOneAndUpdate(
+    { slug },
+    { $pull: { favoritedBy: req.user.userId } },
+    { returnDocument: "after" }
+  )
+  res.json({
+    article: {
+      ...article.toObject(),
+      favorited: false,
+    },
   })
 })
 
