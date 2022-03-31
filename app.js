@@ -22,9 +22,12 @@ app.use((req, res, next) => {
   next();
 });
 
+//COMMENT
+
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
+
 
 app.post("/api/users", async (req, res) => {
   try {
@@ -53,6 +56,16 @@ app.post("/api/users", async (req, res) => {
 });
 
 mongoose.connect("mongodb://localhost/backend2_GroupProject");
+
+//COMMENT
+// Zamirs kommentar
+//FFSFSFasdasda
+
+//GIT ADDasdasdasdas
+
+//ADD PATRIK
+
+
 app.listen(PORT, () => {
   console.log(`Started Express server on port ${PORT}`);
 });
