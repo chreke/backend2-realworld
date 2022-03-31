@@ -72,7 +72,7 @@ app.post("/api/users/login", async (req, res) => {
 
 app.get("/api/articles", async (req, res) => {
   const articles = await Article
-    .find({})
+    .find()
     .populate("author")
     .exec();
   console.log({ articles });
