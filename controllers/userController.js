@@ -8,9 +8,18 @@ const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' }); //expires in 30 days
 };
 
+// const user = asyncHandler(async (req, user, next) => {
+//   const authHeader = req.header('Authorization');
+//   const token = authHeader.split(' ')[1];
+//   if (authHeader) {
+//     req.user = jwt.verify(token, process.env.JWT_SECRET);
+//   }
+//   next();
+// });
+
 //register user
 const registerUser = asyncHandler(async (req, res) => {
-  const { username, password, email,  } = req.body.user;
+  const { username, password, email } = req.body.user;
 
   const userExists = await User.findOne({ username });
   if (userExists) {
@@ -22,9 +31,7 @@ const registerUser = asyncHandler(async (req, res) => {
     username: username,
     password: password,
     email: email,
-    bio: "",
-    
-    
+    bio: '',
   });
 
   const newUser = await user.save();
@@ -37,13 +44,11 @@ const registerUser = asyncHandler(async (req, res) => {
       username: newUser.username,
       password: newUser.password,
       email: newUser.email,
-      bio: "",
-      
-
+      bio: '',
+      image: '',
       token: token,
     },
   });
-  //res.json({ message: 'Register User' }); //set up for initialize for test
 });
 
 //user login
@@ -62,6 +67,8 @@ const login = asyncHandler(async (req, res) => {
         password: user.password,
         email: user.email,
         token: token,
+        image: '',
+        bio: '',
       },
     });
   } else {
@@ -69,4 +76,57 @@ const login = asyncHandler(async (req, res) => {
     throw new Error('Invalid credential');
   }
 });
-module.exports = { registerUser, login };
+
+const getMe = asyncHandler(async (req, res) => {
+  const user = await User.findOne(req.user);
+  const authHeader = req.header('Authorization');
+  const token = authHeader.split(' ')[1];
+  //console.log(user);
+
+  res.json({
+    user: {
+      id: user.id,
+      username: user.username,
+      image: user.image,
+      email: user.email,
+      bio: '',
+      token: token,
+    },
+  });
+});
+
+const updateUser = asyncHandler(async (req, res) => {
+  console.log('old', req.body.user);
+  console.log('req.body.user', req.body.user);
+  const authHeader = req.header('Authorization');
+  const token = authHeader.split(' ')[1];
+
+  const updatedUser = await User.findOneAndUpdate(req.user, req.body.user, {
+    new: true,
+  });
+  //console.log(updatedUser);
+
+  res.json({
+    user: {
+      username: updatedUser.username,
+      email: updatedUser.email,
+      bio: updatedUser.bio,
+      image: updatedUser.image,
+      token: token,
+    },
+  });
+});
+
+const getProfile = asyncHandler(async (req, res) => {
+  const username = req.params.username;
+  const user = await User.findOne({ username });
+  console.log(user);
+  res.json({
+    profile: {
+      username: user.username,
+      bio: user.bio,
+      image: user.image,
+    },
+  });
+});
+module.exports = { registerUser, login, getMe, updateUser, getProfile };
