@@ -52,7 +52,6 @@ app.post("/api/users", async (req, res) => {
       JWTSECRET,
       { expiresIn: "1 h", subject: userId }
     );
-    console.log(token);
     await User.updateOne({ username: username }, { token: token })
     user = ({ email, password, username, token })
     res.json({ user });
@@ -61,7 +60,7 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
-app.post("/api/users/login", requireLogin, async (req, res) => {
+app.post("/api/users/login", async (req, res) => {
   const { email, password } = req.body.user;
   const user = await User.login(email, password);
   if (user) {
@@ -76,16 +75,16 @@ app.get("/api/articles", async (req, res) => {
     .find({})
     .populate("author")
     .exec();
-  //console.log({ articles });
+  console.log({ articles });
   res.json({ articles });
 });
 
 
-app.post("/api/articles", async (req, res) => {
+app.post("/api/articles", requireLogin, async (req, res) => {
   const { title, description, body } = req.body.article
   const user = req.user
-  console.log(user);
-  const article = new Article({ title, description, body })
+  //console.log(user.userId);
+  const article = new Article({ title, description, body, author: user.userId })
   await article.save()
   if (user) {
     res.json({ article })
