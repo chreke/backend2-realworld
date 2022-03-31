@@ -20,6 +20,9 @@ const userSchema = new mongoose.Schema({
   bio: {
     type: String,
     default: ""
+  },
+  profilePicture: {
+    type: String, default: "https://upload.wikimedia.org/wikipedia/commons/7/72/Default-welcomer.png" 
   }
 });
 
