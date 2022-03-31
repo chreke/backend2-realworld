@@ -15,7 +15,7 @@ class Database {
         .then(() => {
             console.log("Connected successfully to database")
         })
-        .catch(() => {
+        .catch((err) => {
             console.log("Error" + err)
         })
     }
