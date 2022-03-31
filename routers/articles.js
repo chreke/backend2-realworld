@@ -41,7 +41,7 @@ router.post("/", async (req, res) => {
   res.json({ article: savedArticle })
 })
 
-router.get("/", async (req, res, next) => {
+router.get("/", async (req, res) => {
   let query = {}
   let limit = 10
   let offset = 0
@@ -53,26 +53,38 @@ router.get("/", async (req, res, next) => {
     offset = req.query.offset
   }
   if (typeof req.query.tag !== "undefined") {
-    const tag = await Tag.findOne({ name: req.query.tag }) // .find
+    const tag = await Tag.findOne({ name: req.query.tag })
     query.tagList = tag._id
   }
 
   const author = await User.findOne({ username: req.query.author })
-  if (author) {
+
+  if (author === null && req.query.author) {
+    console.log("No author")
+    return res.json({ articles: [], articlesCount: 0 })
+  } else if (author) {
     query.author = author._id
   }
-  //console.log(author) // fails test "Articles by Author"
 
   const articles = await Article.find(query)
     .limit(Number(limit))
     .skip(Number(offset))
     .sort({ createdAt: -1 })
     .populate("author")
+    .populate("tagList")
     .exec()
   const articlesCount = await Article.count(query).exec()
 
+  const processedArticles = Array.from(articles).map((article) => {
+    const processedArticle = {
+      ...article.toObject(),
+      tagList: article.tagList.map((tag) => tag.name),
+    }
+    return processedArticle
+  })
+
   res.json({
-    articles: articles,
+    articles: processedArticles,
     articlesCount: articlesCount,
   })
 })

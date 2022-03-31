@@ -6,7 +6,7 @@ const articleSchema = new mongoose.Schema(
     description: { type: String, required: true },
     body: { type: String, required: true },
     slug: { type: String, required: true, lowercase: true },
-    tagList: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }] }, //tagList: [{ type: String, ref: "Tag" }],
+    tagList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
