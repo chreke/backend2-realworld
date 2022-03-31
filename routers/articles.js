@@ -82,7 +82,7 @@ router.get("/", async (req, res) => {
   const processedArticles = Array.from(articles).map((article) => {
     const processedArticle = {
       ...article.toObject(),
-      tagList: article.tagList.map((tag) => tag.name),
+      tagList: article.tagList.map((tag) => tag.name).sort(),
       favorited: article.favoritedBy.includes(req.user?.userId),
     }
     return processedArticle
