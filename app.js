@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv").config();
 
 const { User } = require("./models/User");
+const { Article } = require("./models/Article");
 const mongoose = require("mongoose");
 
 const app = express();
@@ -11,6 +12,22 @@ const PORT = 3000;
 
 app.use(express.json());
 app.use(express.static("dist"));
+
+const requireLogin = (req, res, next) => {
+  const authHeader = req.header("Authorization");
+
+  try {
+    const token = authHeader.split(" ")[1];
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("inloggad");
+    console.log(token);
+    console.log(req.user);
+    next();
+  } catch (err) {
+    console.log(err);
+    res.status(401);
+  }
+};
 
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
@@ -50,6 +67,28 @@ app.post("/users/login", async (req, res) => {
     res.json({ token });
   } else {
     res.sendStatus(401);
+  }
+});
+
+app.get("/user", requireLogin, async (req, res) => {
+  const user = await User.findOne({ _id: req.user.userId });
+  res.json(user);
+});
+
+app.post("/articles", async (req, res) => {
+  const { title, description, body, tagList } = req.body.article;
+  console.log(req.body);
+  try {
+    const article = await Article.create({
+      title: title,
+      description: description,
+      body: body,
+      tagList: tagList,
+    });
+    res.status(201).json({ article });
+  } catch (err) {
+    console.log(err);
+    res.status(400);
   }
 });
 
