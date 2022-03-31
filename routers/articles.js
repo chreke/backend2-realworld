@@ -3,6 +3,8 @@ const mongoose = require("mongoose")
 const { Article } = require("../models/article")
 const { Tag } = require("../models/tag")
 const { filterUnique, lowerCase } = require("../utils")
+const slugify = require("slugify")
+const { User } = require("../models/user")
 
 const router = Router()
 
@@ -24,18 +26,67 @@ router.post("/", async (req, res) => {
 
   const uniqueTags = filterUnique(tagList).map(lowerCase)
   const tags = await saveTags(uniqueTags)
-
+  const slug = slugify(title)
   const article = new Article({
     title,
     description,
     body,
     tagList: tags,
     author: userId,
+    slug: slug,
   })
 
   const savedArticle = await article.save()
 
   res.json({ article: savedArticle })
+})
+
+router.get("/", async (req, res) => {
+  let query = {}
+  let limit = 10
+  let offset = 0
+
+  if (typeof req.query.limit !== "undefined") {
+    limit = req.query.limit
+  }
+  if (typeof req.query.offset !== "undefined") {
+    offset = req.query.offset
+  }
+  if (typeof req.query.tag !== "undefined") {
+    const tag = await Tag.findOne({ name: req.query.tag })
+    query.tagList = tag._id
+  }
+
+  const author = await User.findOne({ username: req.query.author })
+
+  if (author === null && req.query.author) {
+    console.log("No author")
+    return res.json({ articles: [], articlesCount: 0 })
+  } else if (author) {
+    query.author = author._id
+  }
+
+  const articles = await Article.find(query)
+    .limit(Number(limit))
+    .skip(Number(offset))
+    .sort({ createdAt: -1 })
+    .populate("author")
+    .populate("tagList")
+    .exec()
+  const articlesCount = await Article.count(query).exec()
+
+  const processedArticles = Array.from(articles).map((article) => {
+    const processedArticle = {
+      ...article.toObject(),
+      tagList: article.tagList.map((tag) => tag.name),
+    }
+    return processedArticle
+  })
+
+  res.json({
+    articles: processedArticles,
+    articlesCount: articlesCount,
+  })
 })
 
 module.exports = router
