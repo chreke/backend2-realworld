@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const res = require("express/lib/response");
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -26,5 +27,13 @@ userSchema.statics.login = async function (email, password) {
   } 
   return null;
 };
+const updateProfile = async (user) => {
+  if(user.password){ 
+    const hash = await bcrypt.hash(user.password, 10);
+    user.password = hash
+  }
+  const result = await User.findOneAndUpdate({email: user.email}, user, {new: true}).select({password: false, _id: false})
+  return result
+}
 const User = mongoose.model("User", userSchema);
-exports.User = User;
+module.exports = {User, updateProfile};
