@@ -96,13 +96,12 @@ app.get("/api/user", async (req, res) => {
 })
 
 app.get("/api/profiles/:username", async (req, res) => {
-  const user = req.user
-  const findUser = await User.findOne({ _id: user.userId })
+  const user = await User.findOne({ username: req.params.username })
   res.json({
     profile: {
-      username: findUser.username,
-      image: findUser.image,
-      bio: findUser.bio,
+      username: user.username,
+      image: user.image,
+      bio: user.bio,
     },
   })
 })
