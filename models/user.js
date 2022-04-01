@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", async function (next) {
-  user = this
   if (this.modifiedPaths().includes("password")) {
     const hash = await bcrypt.hash(this.password, 10);
     this.password = hash;
@@ -27,12 +26,12 @@ userSchema.statics.login = async function (email, password) {
   } 
   return null;
 };
-const updateProfile = async (user) => {
+const updateProfile = async (user, userId) => {
   if(user.password){ 
     const hash = await bcrypt.hash(user.password, 10);
     user.password = hash
   }
-  const result = await User.findOneAndUpdate({email: user.email}, user, {new: true}).select({password: false, _id: false})
+  const result = await User.findOneAndUpdate({_id: userId}, user, {new: true}).select({password: false, _id: false})
   return result
 }
 const User = mongoose.model("User", userSchema);
