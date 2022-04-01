@@ -40,9 +40,10 @@ app.get("/", (_req, res) => {
 });
 
 app.post("/api/users", async (req, res) => {
-
+  const bio = "";
+  const image = null;
   const { email, password, username } = req.body.user;
-  let user = new User({ email, password, username });
+  let user = new User({ email, password, username, bio, image });
 
   try {
     await user.save();
@@ -53,7 +54,7 @@ app.post("/api/users", async (req, res) => {
       { expiresIn: "1 h", subject: userId }
     );
     await User.updateOne({ username: username }, { token: token })
-    user = ({ email, password, username, token })
+    user = ({ email, password, username, token, bio, image })
     res.json({ user });
   } catch (err) {
     console.log(err);
@@ -71,8 +72,8 @@ app.post("/api/users/login", async (req, res) => {
 });
 
 app.get("/api/articles", async (req, res) => {
+
   let articlesCount = await Article.find().count();
-  console.log(articlesCount);
   const articles = await Article
     .find()
     .populate("author")

@@ -6,8 +6,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   token: { type: String, default: "" },
-  bio: { type: String, default: "" },
-  image: { type: String, default: null }
+  bio: { type: String },
+  image: { type: String }
 });
 
 userSchema.pre(
