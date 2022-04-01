@@ -5,6 +5,7 @@ const path = require("path");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const user = require("./routes/user")
+const auth = require("./routes/auth")
 
 const { User } = require("./models/user");
 
@@ -12,6 +13,7 @@ const app = express();
 const PORT = 3000;
 app.use(cors());
 app.use(express.json());
+app.use(auth)
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
