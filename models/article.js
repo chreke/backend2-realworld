@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 const articleSchema = new mongoose.Schema(
     {
-        slug: { type: String, default: "" },
+        slug: { type: String },
         title: { type: String, required: true },
         description: { type: String, required: true },
         body: { type: String, required: true },
