@@ -79,12 +79,30 @@ app.get("/api/articles", async (req, res) => {
   res.json({ articles });
 });
 
+function slugTitle(title) {
+
+  let slugTitle = "";
+
+  array = title.toLowerCase().split(" ");
+
+  lastChar = array[array.length - 1]
+
+  map = array.map(item => item + "-");
+
+  map.splice(map.length - 1, 1, lastChar);
+
+  map.forEach(item => {
+    slugTitle = slugTitle + item;
+  })
+  return slugTitle
+};
+
 
 app.post("/api/articles", requireLogin, async (req, res) => {
   const { title, description, body } = req.body.article
   const user = req.user
-  //console.log(user.userId);
-  const article = new Article({ title, description, body, author: user.userId })
+  let slug = slugTitle(title);
+  const article = new Article({ title, description, body, author: user.userId, slug })
   await article.save()
   if (user) {
     res.json({ article })
