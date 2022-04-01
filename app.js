@@ -4,7 +4,7 @@ const dotenv = require("dotenv").config();
 const path = require("path");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
-const login = require("./routes/login")
+const user = require("./routes/user")
 
 const { User } = require("./models/user");
 
@@ -26,15 +26,13 @@ app.post("/users", async (req, res) => {
   const { username, password, email } = req.body.user;   
   const user = new User({ username, password, email });
   await user.save();
-  console.log("username: ", username, "password: ", password, "email: ", email);
-  console.log(req.body);
   res.send(req.body);
 });
 app.get("users", async (req, res) => {
   const user = User.find({})
 })
 
-app.use("/", login)
+app.use("/", user)
 
 mongoose.connect(MONGODB_URI);
 
