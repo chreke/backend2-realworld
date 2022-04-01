@@ -1,6 +1,7 @@
 const express = require("express")
 const {User, updateProfile} = require("../models/user")
 const jwt = require("jsonwebtoken");
+const verify  = require("../app");
 const router = express.Router()
 const JWT_SECRET = process.env.JWT_SECRET
 router.post("/users/login", async (req, res) => {
@@ -19,9 +20,10 @@ router.post("/users/login", async (req, res) => {
       res.json({user})
     } 
 });
-router.put("/user", async (req, res) => {
+router.put("/user", async (req, res, next) => {
+  const userId = req.user
   const userInfo = { username, email, password, bio, image, token} = req.body.user
-  const user = await updateProfile(userInfo)
+  const user = await updateProfile(userInfo,userId ) 
   res.json({user})
 })
 
