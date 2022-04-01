@@ -71,26 +71,22 @@ app.post("/api/users/login", async (req, res) => {
 });
 
 app.get("/api/articles", async (req, res) => {
+  let articlesCount = await Article.find().count();
+  console.log(articlesCount);
   const articles = await Article
     .find()
     .populate("author")
     .exec();
-  console.log({ articles });
-  res.json({ articles });
+  //console.log({ articles });
+  res.json({ articles, articlesCount });
 });
 
 function slugTitle(title) {
-
   let slugTitle = "";
-
   array = title.toLowerCase().split(" ");
-
   lastChar = array[array.length - 1]
-
   map = array.map(item => item + "-");
-
   map.splice(map.length - 1, 1, lastChar);
-
   map.forEach(item => {
     slugTitle = slugTitle + item;
   })
