@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 
 const { User } = require("./models/user");
 const { Article } = require("./models/article")
+// const { Comment } = require("./models/comment")
 
 const app = express();
 const PORT = 3000;
@@ -142,6 +143,28 @@ app.post("/api/articles", requireLogin, async (req, res) => {
   }
 })
 
+app.get("/api/articles/:slug", async (req, res) => {
+  const slug = req.params.slug;
+  let article = await Article
+    .find({ slug: slug })
+    .populate("author")
+    .exec()
+  article = article[0];
+  console.log(article[0])
+  res.json({ article })
+})
+
+// app.post("/api/articles/:slug/comments", async (req, res) => {
+//   const { body } = req.body.comment;
+//   const user = req.user;
+//   const comment = new Comment({ body, author: user.userId })
+//   await comment.save();
+//   if (user) {
+//     res.json({ comment });
+//   } else {
+//     res.sendStatus(401);
+//   }
+// })
 
 app.put("/api/user", requireLogin, async (req, res) => {
   const { email, username, image, bio } = req.body.user
