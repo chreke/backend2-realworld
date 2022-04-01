@@ -95,8 +95,6 @@ app.get("/api/user", async (req, res) => {
   })
 })
 
-console.log("this is a test");
-
 app.get("/api/profiles/:username", async (req, res) => {
   const user = await User.findOne({ username: req.params.username })
   res.json({
