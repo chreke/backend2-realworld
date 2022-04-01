@@ -5,7 +5,7 @@ const { User } = require("./models/user")
 const dotenv = require("dotenv")
 const articlesRouter = require("./routers/articles")
 const tagsRouter = require("./routers/tags")
-const bcrypt = require("bcrypt")
+const profilesRouter = require("./routers/profiles")
 
 dotenv.config()
 
@@ -30,6 +30,7 @@ app.use(authorizeUser)
 
 app.use("/api/articles", articlesRouter)
 app.use("/api/tags", tagsRouter)
+app.use("/api/profiles", profilesRouter)
 
 app.post("/api/users", async (req, res) => {
   const { username, email, password } = req.body.user
@@ -91,17 +92,6 @@ app.get("/api/user", async (req, res) => {
       username: databaseUser.username,
       bio: databaseUser.bio,
       image: databaseUser.image,
-    },
-  })
-})
-
-app.get("/api/profiles/:username", async (req, res) => {
-  const user = await User.findOne({ username: req.params.username })
-  res.json({
-    profile: {
-      username: user.username,
-      image: user.image,
-      bio: user.bio,
     },
   })
 })
