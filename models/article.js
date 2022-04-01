@@ -6,7 +6,7 @@ const articleSchema = new mongoose.Schema(
         title: { type: String, required: true },
         description: { type: String, required: true },
         body: { type: String, required: true },
-        tagList: { type: Array, 'default': [] },
+        tagList: { type: Array, default: [] },
         createdAt: { type: Date, default: Date.now },
         updatedAt: { type: Date, default: Date.now },
         favorited: { type: Boolean, default: false },
