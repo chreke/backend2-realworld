@@ -94,6 +94,26 @@ router.get("/", async (req, res) => {
   })
 })
 
+router.get("/feed", async (req, res) => {
+  const user = await User.findById(req.user.userId)
+  const limit = req.query.limit
+  const offset = req.query.offset
+  const articles = await Article.find({ author: { $in: user.follows } })
+    .limit(Number(limit))
+    .skip(Number(offset))
+    .populate("author")
+    .populate("tagList")
+
+  const processedArticles = articles.map((article) => {
+    return {
+      ...article.toObject(),
+      tagList: article.tagList.map((tag) => tag.name).sort(),
+      favorited: article.favoritedBy.includes(req.user?.userId),
+    }
+  })
+  res.json({ articles: processedArticles, articlesCount: articles.length })
+})
+
 router.post("/:slug/favorite", async (req, res) => {
   const { slug } = req.params
   const article = await Article.findOneAndUpdate(
