@@ -144,4 +144,19 @@ router.delete("/:slug/favorite", async (req, res) => {
   })
 })
 
+router.get("/:slug", async (req, res) => {
+  const { slug } = req.params
+  const article = await Article.findOne({ slug: slug })
+    .populate("author")
+    .populate("tagList")
+    .exec()
+
+  const processedArticle = {
+    ...article.toObject(),
+    tagList: article.tagList.map((tag) => tag.name).sort(),
+    favorited: article.favoritedBy.includes(req.user?.userId),
+  }
+  res.json({ article: processedArticle })
+})
+
 module.exports = router
