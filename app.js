@@ -9,11 +9,12 @@ const app = express()
 const PORT = 3000;
 
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect('mongodb://localhost:27017/real-world')
   .then(() => {
     app.use(express.json())
     app.use(express.static("dist"));
     app.use("/api/users", userRouter)
+    app.use("/api/users/login", userRouter)
 
     app.get("/", (_req, res) => {
       res.sendFile(path.join(__dirname, "dist", "index.html"));
