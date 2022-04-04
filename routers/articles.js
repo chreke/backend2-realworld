@@ -2,7 +2,7 @@ const { Router } = require("express")
 const mongoose = require("mongoose")
 const { Article } = require("../models/article")
 const { Tag } = require("../models/tag")
-const { filterUnique, lowerCase } = require("../utils")
+const { filterUnique, lowerCase } = require("../utils/helpers")
 const slugify = require("slugify")
 const { User } = require("../models/user")
 
