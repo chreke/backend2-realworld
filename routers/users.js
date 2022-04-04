@@ -1,5 +1,6 @@
 const { Router } = require("express")
 const { User } = require("../models/user")
+const { createUserToken } = require("../utils/auth")
 
 const router = Router()
 
@@ -38,14 +39,5 @@ router.post("/", async (req, res) => {
     },
   })
 })
-
-const createUserToken = (user) => {
-  const userId = user._id.toString()
-  return (token = jwt.sign(
-    { userId, email: user.email },
-    process.env.JWT_SECRET,
-    { expiresIn: "24 h", subject: userId }
-  ))
-}
 
 module.exports = router
