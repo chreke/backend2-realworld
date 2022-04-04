@@ -7,23 +7,12 @@ const tagsRouter = require("./routers/tags")
 const profilesRouter = require("./routers/profiles")
 const usersRouter = require("./routers/users")
 const userRouter = require("./routers/user")
+const { authorizeUser } = require("./middleware/auth")
 
 dotenv.config()
 
 const app = express()
 const PORT = 3000
-
-const jwt = require("jsonwebtoken")
-
-const authorizeUser = (req, res, next) => {
-  const authHeader = req.header("Authorization")
-  if (authHeader) {
-    const token = authHeader.split(" ")[1]
-    req.user = jwt.verify(token, process.env.JWT_SECRET)
-    req.token = token
-  }
-  next()
-}
 
 app.use(express.static("dist"))
 app.use(express.json())
