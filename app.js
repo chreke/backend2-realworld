@@ -68,6 +68,7 @@ app.post("/api/users/login", async (req, res) => {
       JWTSECRET,
       { expiresIn: "1 h", subject: userId }
     );
+    //console.log(token);
     await User.updateOne({ token: token })
     res.json({ user });
   } else {
@@ -77,12 +78,16 @@ app.post("/api/users/login", async (req, res) => {
 
 app.get("/api/articles", async (req, res) => {
   let articlesCount = await Article.find().count();
+  let queryParameters = {};
+  if (req.query.tag !== undefined) {
+    queryParameters = { tagList: req.query.tag }
+  }
+
   const articles = await Article
-    .find({})
+    .find(queryParameters)
     .sort('-createdAt')
     .populate("author")
     .exec();
-  //console.log({ articles });
   res.json({ articles, articlesCount });
 });
 
@@ -150,7 +155,7 @@ app.get("/api/articles/:slug", async (req, res) => {
     .populate("author")
     .exec()
   article = article[0];
-  console.log(article[0])
+  //console.log(article[0])
   res.json({ article })
 })
 
