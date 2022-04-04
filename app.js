@@ -51,7 +51,7 @@ app.post("/api/users", async (req, res) => {
       { expiresIn: "1 h", subject: userId }
     );
     await User.updateOne({ username: username }, { token: token })
-    user = ({ email, password, username, token, bio, image })
+    user = ({ email, username, token, bio, image })
     res.json({ user });
   } catch (err) {
     console.log(err);
@@ -60,7 +60,7 @@ app.post("/api/users", async (req, res) => {
 
 app.post("/api/users/login", async (req, res) => {
   const { email, password } = req.body.user;
-  const user = await User.login(email, password);
+  let user = await User.login(email, password);
   if (user) {
     const userId = user._id.toString();
     const token = jwt.sign(
@@ -68,8 +68,14 @@ app.post("/api/users/login", async (req, res) => {
       JWTSECRET,
       { expiresIn: "1 h", subject: userId }
     );
-    //console.log(token);
-    await User.updateOne({ token: token })
+    console.log(token);
+    await User.updateOne({ username: user.username }, { token: token })
+    username = user.username;
+    bio = user.bio;
+    image = user.image;
+    //console.log(email, username, token, bio, image);
+    user = ({ email, username, token, bio, image })
+    console.log(user);
     res.json({ user });
   } else {
     res.sendStatus(401);
