@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const { User } = require("./models/User");
 const { Article } = require("./models/Article");
 const mongoose = require("mongoose");
+const { use } = require("passport");
 
 const app = express();
 const PORT = 3000;
@@ -71,33 +72,22 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
-// app.post("/api/users", async (req, res) => {
-//   const { username, email, password } = req.body.user;
-//   const user = new User({ username, email, password });
-//   const createdUser = await user.save();
-//   const token = createToken(createdUser);
-//   console.log(token);
-
-//   res.json({
-//     user: {
-//       username: createdUser.username,
-//       email: createdUser.email,
-//       token: token,
-//       image: createdUser.image,
-//       bio: createdUser.bio,
-//     },
-//   });
-// });
-
 app.post("/api/users/login", async (req, res) => {
-  console.log("safsasa");
   const { email, password } = req.body.user;
   console.log(req.body);
   const user = await User.login(email, password);
+  console.log(user);
   if (user) {
     const token = createToken(user);
-
-    res.json({ token });
+    res.json({
+      user: {
+        email: email,
+        username: user.username,
+        bio: user.bio,
+        image: user.image,
+        token: token,
+      },
+    });
   } else {
     res.sendStatus(401);
   }
