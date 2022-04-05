@@ -51,14 +51,35 @@ route.get("/", (req,res) => {
 // })
 
 // REGISTER USER - It works
+/*
 route.post("/", async (req, res) => {
-    const createdUser = new User({
+    console.log("register")
+    console.log(req.body)
+    const user = new User({
         username: req.body.user.username,
         password: req.body.user.password,
         email: req.body.user.email,
     })
-    await createdUser.save();
-    res.send(createdUser);
+    await user.save();
+    res.send(user);
+})
+*/
+
+// REGISTER USER - 2nd ATTEMPT (5/4/21)
+route.post("/", async (req, res) => {
+    console.log("register:")
+    console.log(req.body)
+    var user = new User(req.body)
+    
+    user.username = req.body.user.username;
+    user.email = req.body.user.email;
+    user.password = req.body.user.password;
+
+    console.log("user:")
+    console.log(user)
+    
+    await user.save();
+    res.send({user});
 })
 
 module.exports = route;
