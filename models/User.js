@@ -32,8 +32,10 @@ const getUserByUsername = async (username) => {
 
 const login = async (email, password) => {
     const user = await User.findOne({ email });
-    if (user && (await bcrypt.compare(password, user.password))) {
-      return user;
+    console.log(user)
+    if (user && (await bcrypt.compare(password, user.password))) 
+    {
+        return user;
     }
     return null;
 };

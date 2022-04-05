@@ -28,12 +28,15 @@ userRouter.post("/", checkEmptyFields, validateUsernameAndEmail, (req, res) => {
 });
 
 userRouter.post("/login", async (req,res) =>{
-    const { email, password } = req.body;
+
+  
+    const { email, password } = req.body.user;
     const user = await login(email, password);
+    //console.log(user)
     if (user) {
       const token = await generateToken(user);
       console.log(user)
-      res.json({ token });
+      res.json({ user: {token:token, email:user.email, username:user.username} });
     } else {
       res.sendStatus(401);
       
