@@ -13,8 +13,8 @@ route.get("/", (req, res) =>{
             "description": "this is the description",
             "body": "This is the body",
             "tagList": ["dragons", "training"],
-            "createdAt": "2022-03-24",
-            "updatedAt": "2022-03-25",
+            "createdAt": new Date(),
+            "updatedAt": new Date(),
             "favorited": false,
             "favoritesCount": 0,
             "author": {
@@ -30,8 +30,8 @@ route.get("/", (req, res) =>{
             "description": "this is the description",
             "body": "This is the body",
             "tagList": ["dragons", "training"],
-            "createdAt": "2022-03-24",
-            "updatedAt": "2022-03-25",
+            "createdAt": new Date(),
+            "updatedAt": new Date(),
             "favorited": false,
             "favoritesCount": 0,
             "author": {
@@ -55,8 +55,8 @@ route.get("/:slug", (req, res) => {
             "description": "this is the description",
             "body": "This is the body",
             "tagList": ["dragons", "training"],
-            "createdAt": "2022-03-24",
-            "updatedAt": "2022-03-25",
+            "createdAt": new Date(),
+            "updatedAt": new Date(),
             "favorited": false,
             "favoritesCount": 0,
             "author": {
@@ -75,8 +75,8 @@ route.get("/:slug/comments", (req,res) => {
         "comments": [
             {
             "id": 1,
-            "createdAt": "2022-03-24",
-            "updatedAt": "2022-03-25",
+            "createdAt": new Date(),
+            "updatedAt": new Date(),
             "body": "This is the 1st comment's body",
             "author": {
                 "username": "panos",
@@ -87,8 +87,8 @@ route.get("/:slug/comments", (req,res) => {
             },
             {
             "id": 2,
-            "createdAt": "2022-03-24",
-            "updatedAt": "2022-03-25",
+            "createdAt": new Date(),
+            "updatedAt": new Date(),
             "body": "This is the 2nd comment's body",
             "author": {
                 "username": "mary",
