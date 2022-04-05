@@ -2,18 +2,20 @@ const express = require("express");
 const path = require("path");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv").config();
+const bcrypt = require("bcrypt");
 
 const { User } = require("./models/User");
 const { Article } = require("./models/Article");
 const mongoose = require("mongoose");
 
 const app = express();
-const PORT = 8000;
+const PORT = 3000;
 
 app.use(express.json());
 app.use(express.static("dist"));
 
 const requireLogin = (req, res, next) => {
+  console.log("dsasdadsa");
   const authHeader = req.header("Authorization");
 
   try {
@@ -29,6 +31,15 @@ const requireLogin = (req, res, next) => {
   }
 };
 
+const createToken = (user) => {
+  const userId = user._id.toString();
+  return (token = jwt.sign(
+    { userId, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: "24 h", subject: userId }
+  ));
+};
+
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
@@ -36,34 +47,56 @@ app.get("/", (_req, res) => {
 app.post("/api/users", async (req, res) => {
   console.log(req.body);
   const { username, email, password } = req.body.user;
-  console.log("username", username);
   try {
-    const user = await User.create({
+    const user = new User({
       username: username,
       email: email,
       password: password,
     });
-    res.status(201).json({ user });
+    const createdUser = await user.save();
+    const token = createToken(user);
+    console.log(token);
+    res.status(201).json({
+      user: {
+        email: email,
+        username: username,
+        bio: createdUser.bio,
+        image: createdUser.image,
+        token: token,
+      },
+    });
   } catch (err) {
     console.log(err);
     res.status(400).json({ message: "Problem to register" });
   }
 });
 
+// app.post("/api/users", async (req, res) => {
+//   const { username, email, password } = req.body.user;
+//   const user = new User({ username, email, password });
+//   const createdUser = await user.save();
+//   const token = createToken(createdUser);
+//   console.log(token);
+
+//   res.json({
+//     user: {
+//       username: createdUser.username,
+//       email: createdUser.email,
+//       token: token,
+//       image: createdUser.image,
+//       bio: createdUser.bio,
+//     },
+//   });
+// });
+
 app.post("/api/users/login", async (req, res) => {
+  console.log("safsasa");
   const { email, password } = req.body.user;
   console.log(req.body);
   const user = await User.login(email, password);
   if (user) {
-    const userId = user._id.toString();
-    const token = jwt.sign(
-      { userId, email: user.email },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "60h",
-        subject: userId,
-      }
-    );
+    const token = createToken(user);
+
     res.json({ token });
   } else {
     res.sendStatus(401);
@@ -75,23 +108,59 @@ app.get("/user", requireLogin, async (req, res) => {
   res.json(user);
 });
 
+// app.put("/api/user", async (req, res) => {
+//   console.log(req.body.user);
+//   console.log(req.user.userId);
+//   const { email, username, bio, password, image } = req.body.user;
+//   try {
+//     await User.findOneAndUpdate(
+//       { _id: req.user.userId },
+//       {
+//         $set: {
+//           username: username,
+//           bio: bio,
+//           email: email,
+//           image: image,
+//           password: password,
+//         },
+//       }
+//     );
+//     res.status(201).json({
+//       user: {
+//         email: email,
+//         username: username,
+//         bio: bio,
+//         image: image,
+//       },
+//     });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
+
 app.put("/api/user", requireLogin, async (req, res) => {
-  console.log(req.body.user);
-  console.log(req.user.userId);
-  const { email, username, bio } = req.body.user;
+  console.log(`user: ${req.body.user}`);
+  console.log(`userid: ${req.user.userId}`);
+  const { email, username, bio, password } = req.body.user;
   try {
-    await User.updateOne(
+    const updatedUser = await User.findOneAndUpdate(
       { _id: req.user.userId },
       {
-        $set: {
-          username: username,
-          bio: bio,
-          email: email,
-          profilePicture: profilePicture,
-        },
-      }
+        username: username,
+        bio: bio,
+        email: email,
+        password: password,
+      },
+      { returnDocument: "after" }
     );
-    res.status(201).json({ username, email });
+    res.status(201).json({
+      user: {
+        email: updatedUser.email,
+        username: updatedUser.username,
+        bio: updatedUser.bio,
+        image: updatedUser.image,
+      },
+    });
   } catch (err) {
     console.log(err);
   }
