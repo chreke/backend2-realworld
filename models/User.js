@@ -17,11 +17,12 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
   bio: {
-    type: String
+    type: String,
+    required: false
   },  
   image: {
     type: String, 
-    default: "/images/profilePic.jpg"
+    default: ""
   },
 });
 userSchema.pre('save', async function (next) {
