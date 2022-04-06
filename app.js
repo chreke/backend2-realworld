@@ -6,9 +6,9 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const user = require("./routes/user")
 const auth = require("./routes/auth")
-
+const article = require("./routes/article")
 const { User } = require("./models/user");
-
+const tags = require("./routes/tags")
 const app = express();
 const PORT = 3000;
 app.use(cors());
@@ -17,25 +17,16 @@ app.use(auth)
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-// app.get("/", (_req, res) => {
-//   res.sendFile(path.join(__dirname, "dist", "index.html"));
-// });
+ app.get("/", (_req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
-// app.use(express.static(path.join(__dirname, "dist", "index.html")));
+app.use(express.static(path.join(__dirname, "dist", "index.html")));
 app.use(express.static("dist"));
 
-app.post("/users", async (req, res) => {
-  const { username, password, email } = req.body.user;   
-  const user = new User({ username, password, email });
-  await user.save();
-  res.send(req.body);
-});
-app.get("users", async (req, res) => {
-  const user = User.find({})
-})
-
-app.use("/", user)
-
+app.use("/api/users", user)
+app.use("/api/articles", article)
+app.use("/api/tags", tags)
 mongoose.connect(MONGODB_URI);
 
 app.listen(PORT, () => {
