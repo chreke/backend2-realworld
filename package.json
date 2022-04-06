@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "APIURL=http://localhost:3000/api ./api/run-api-tests.sh",
+    "test": "APIURL=http://localhost:3000 ./api/run-api-tests.sh",
     "start": "nodemon app.js"
   },
   "keywords": [],
@@ -13,9 +13,10 @@
   "dependencies": {
     "ejs": "^3.1.6",
     "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.4.1",
-    "mongoose": "^6.2.8",
+    "mongoose": "^6.2.10",
+    "nodemon": "^2.0.15",
     "passport": "^0.5.2"
-    "nodemon": "^2.0.15"
   }
 }
