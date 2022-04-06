@@ -15,6 +15,7 @@ const profileRouter = require("./controllers/profile").router;
 const userRouter = require("./controllers/user").router;
 const articlesRouter = require("./controllers/articles").router;
 const tagsRouter = require("./controllers/tags").router;
+const slugRouter = require("./controllers/slug").router;
 
 app.use(express.static("dist"));
 app.use(express.json());
@@ -23,6 +24,7 @@ app.use("/api", profileRouter);
 // app.use("/", userRouter);
 app.use("/api", articlesRouter);
 app.use("/api", tagsRouter);
+app.use("/api", slugRouter);
 
 app.use((req, res, next) => {
   const authHeader = req.header("Authorization");
@@ -173,16 +175,16 @@ app.post("/api/articles", requireLogin, async (req, res) => {
   }
 })
 
-app.get("/api/articles/:slug", async (req, res) => {
-  const slug = req.params.slug;
-  let article = await Article
-    .find({ slug: slug })
-    .populate("author")
-    .exec()
-  article = article[0];
+// app.get("/api/articles/:slug", async (req, res) => {
+//   const slug = req.params.slug;
+//   let article = await Article
+//     .find({ slug: slug })
+//     .populate("author")
+//     .exec()
+//   article = article[0];
 
-  res.json({ article })
-})
+//   res.json({ article })
+// })
 
 // app.post("/api/articles/:slug/comments", async (req, res) => {
 //   const { body } = req.body.comment;
