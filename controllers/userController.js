@@ -96,7 +96,6 @@ const getMe = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  console.log('old', req.body.user);
   console.log('req.body.user', req.body.user);
   const authHeader = req.header('Authorization');
   const token = authHeader.split(' ')[1];

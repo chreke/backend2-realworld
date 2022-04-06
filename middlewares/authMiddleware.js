@@ -11,14 +11,15 @@ const protect = asyncHandler(async (req, res, next) => {
         return res.status(400).send('error');
       } else {
         req.user_data = token_data;
-
         next();
       }
     });
   }
 
   if (!token) {
-    throw new Error('Not authorized, no token');
+    // res.redirect('/api/users/login');
+    // throw new Error('Not authorized, no token');
+    return res.status(401).json({ message: 'Auth Error' });
   }
 });
 
