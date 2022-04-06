@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true, select: false },
   bio: { type: String, default: " " },
   image: { type: String, default: "https://i.stack.imgur.com/34AD2.jpg" },
+  followedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  follows: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 })
 
 userSchema.pre("save", async function (next) {
