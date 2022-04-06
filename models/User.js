@@ -31,4 +31,14 @@ const getUserByUsername = async (username) => {
     return user
 }
 
-module.exports = { createUser, getUserByUsername }
+const login = async (email, password) => {
+    const user = await User.findOne({ email });
+    console.log(user)
+    if (user && (await bcrypt.compare(password, user.password))) 
+    {
+        return user;
+    }
+    return null;
+};
+
+module.exports = { createUser, getUserByUsername, login }

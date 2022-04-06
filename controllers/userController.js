@@ -1,5 +1,6 @@
 const { createUser } = require("../models/User")
 
+
 const userController = {
     userCreate: async (req, res) => {
         const user = await createUser(req.body.user)
@@ -11,4 +12,8 @@ const userController = {
     }
 }
 
-module.exports = { userController }
+
+
+
+
+module.exports = { userController}
