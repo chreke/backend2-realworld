@@ -20,13 +20,24 @@ const saveTags = (tags) =>
     })
   )
 
+const findUniqueSlug = async (slug, identifier = 1) => {
+  const slugToTest = identifier === 1 ? slug : slug + "-" + identifier
+  const article = await Article.findOne({ slug: slugToTest })
+  if (!article) {
+    return slugToTest
+  } else {
+    return await findUniqueSlug(slug, identifier + 1)
+  }
+}
+
 router.post("/", async (req, res) => {
   const { title, description, body, tagList } = req.body.article
   const { userId } = req.user
 
   const uniqueTags = filterUnique(tagList).map(lowerCase)
   const tags = await saveTags(uniqueTags)
-  const slug = slugify(title)
+  const slug = await findUniqueSlug(slugify(title))
+
   const article = new Article({
     title,
     description,
