@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
-
 const jwt = require("jsonwebtoken");
 
 const { User } = require("./models/user");
@@ -48,7 +47,7 @@ app.post("/api/users", async (req, res) => {
     const token = jwt.sign(
       { userId, username: username },
       JWTSECRET,
-      { expiresIn: "1 h", subject: userId }
+      { expiresIn: "2 h", subject: userId }
     );
     await User.updateOne({ username: username }, { token: token })
     user = ({ email, username, token, bio, image })
@@ -66,16 +65,17 @@ app.post("/api/users/login", async (req, res) => {
     const token = jwt.sign(
       { userId, username: user.username },
       JWTSECRET,
-      { expiresIn: "1 h", subject: userId }
+      { expiresIn: "2 h", subject: userId }
     );
-    console.log(token);
+    //console.log(token);
+    //console.log(user.token)
     await User.updateOne({ username: user.username }, { token: token })
     username = user.username;
     bio = user.bio;
     image = user.image;
     //console.log(email, username, token, bio, image);
     user = ({ email, username, token, bio, image })
-    console.log(user);
+    //console.log(user);
     res.json({ user });
   } else {
     res.sendStatus(401);
@@ -145,7 +145,7 @@ app.post("/api/articles", requireLogin, async (req, res) => {
   const { title, description, body, tagList } = req.body.article
   const user = req.user
   let slug = slugTitle(title);
-  const article = new Article({ title, description, body, author: user.userId, slug, tagList })
+  const article = new Article({ title, description, body, author: user.userId, slug, tagList: tagList.sort() })
   await article.save()
   if (user) {
     res.json({ article })
