@@ -36,7 +36,8 @@ const registerUser = asyncHandler(async (req, res) => {
     username: username,
     password: password,
     email: email,
-    bio: '',
+    bio: "",
+    image: "/images/profilePic.jpg"
   });
 
   const newUser = await user.save();
@@ -71,6 +72,8 @@ const login = asyncHandler(async (req, res) => {
         username: user.username,
         password: user.password,
         email: user.email,
+        bio: "",
+        image: "",
         token: token,
         image: '',
         bio: '',
