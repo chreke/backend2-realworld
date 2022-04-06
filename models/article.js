@@ -66,4 +66,7 @@ const unFavoriteArticle = async(slug, req) => {
     /* return await Article.findOneAndUpdate(slug, {$inc: {favoritesCount: -1}, favorited: false}, {new: true}) */
     return await Article.findOneAndUpdate(slug, {favoritedCounts: {$size: "$favorited"}, favorited: req.user.username})
 } 
-module.exports = { createArticle, getAllArticle, findArticlesQuery, findOneArticle,findOneAndUpdateArticle, findAllTags, favoriteArticle,unFavoriteArticle }
+const deleteArticle = async(slug, username) => {
+    return await Article.findOneAndDelete({slug: slug, username: username})
+}
+module.exports = {deleteArticle, createArticle, getAllArticle, findArticlesQuery, findOneArticle,findOneAndUpdateArticle, findAllTags, favoriteArticle,unFavoriteArticle }

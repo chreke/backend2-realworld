@@ -1,4 +1,4 @@
-const {createArticle, getAllArticle, findArticlesQuery, findOneArticle, findOneAndUpdateArticle, favoriteArticle, unFavoriteArticle} = require("../models/article")
+const {createArticle, getAllArticle, findArticlesQuery, findOneArticle, findOneAndUpdateArticle, favoriteArticle, unFavoriteArticle, deleteArticle} = require("../models/article")
 exports.article_Create = async function(req, res, next) {
     const article = await createArticle(req.body.article, req.user)
     res.json({article})
@@ -26,5 +26,9 @@ exports.favorite_Article = async function(req, res, next){
 }
 exports.unFavorite_Article = async function(req, res, next) {
     const article = await unFavoriteArticle(req.params)
+    res.json({article})
+}
+exports.delete_Article = async function(req, res, next) {
+    const article = await deleteArticle(req.params.slug, req.user.username)
     res.json({article})
 }
