@@ -32,7 +32,7 @@ const renderArticles = async (req, res) => {
 
     try {
         const articlesCount = await Article.find().count()
-        const articles = await Article.find().exec()
+        const articles = await Article.find().sort('-createdAt').exec()
         res.json( { articles, articlesCount })
        
         
