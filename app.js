@@ -5,18 +5,22 @@ const jwt = require("jsonwebtoken");
 
 const { User } = require("./models/user");
 const { Article } = require("./models/article")
-// const { Comment } = require("./models/comment")
+// const { Comment } = require("./models/comment")asdas
 
 const app = express();
 const PORT = 3000;
 const JWTSECRET = "lsdkjflsdjwerd2342fsdjfytsdas";
 
 const profileRouter = require("./controllers/profile").router;
+const userRouter = require("./controllers/user").router;
+const profileArticles = require("./controllers/articles").router;
 
 app.use(express.static("dist"));
 app.use(express.json());
 
 app.use("/api", profileRouter);
+// app.use("/", userRouter);
+app.use("/", profileArticles);
 
 app.use((req, res, next) => {
   const authHeader = req.header("Authorization");
@@ -96,20 +100,19 @@ app.post("/api/users/login", async (req, res) => {
   }
 });
 
-app.get("/api/articles", async (req, res) => {
-  let articlesCount = await Article.find().count();
-  let queryParameters = {};
-  if (req.query.tag !== undefined) {
-    queryParameters = { tagList: req.query.tag }
-  }
-
-  const articles = await Article
-    .find(queryParameters)
-    .sort('-createdAt')
-    .populate("author")
-    .exec();
-  res.json({ articles, articlesCount });
-});
+// app.get("/api/articles", async (req, res) => {
+//   let articlesCount = await Article.find().count();
+//   let queryParameters = {};
+//   if (req.query.tag !== undefined) {
+//     queryParameters = { tagList: req.query.tag }
+//   }
+//   const articles = await Article
+//     .find(queryParameters)
+//     .sort('-createdAt')
+//     .populate("author")
+//     .exec();
+//   res.json({ articles, articlesCount });
+// });
 
 function getTags(articles, articlesCount) {
 
