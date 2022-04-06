@@ -13,6 +13,7 @@ app.use(authorizeUser);
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/', require('./routes/userRoutes'));
+app.use('/', require('./routes/articleRoutes'));
 
 app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
