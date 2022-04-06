@@ -13,18 +13,18 @@ const JWTSECRET = "lsdkjflsdjwerd2342fsdjfytsdas";
 
 const profileRouter = require("./controllers/profile").router;
 const userRouter = require("./controllers/user").router;
-const articlesRouter = require("./controllers/articles").router;
-const tagsRouter = require("./controllers/tags").router;
-const slugRouter = require("./controllers/slug").router;
+const GETarticlesRouter = require("./controllers/GETarticles").router;
+const GETtagsRouter = require("./controllers/GETtags").router;
+const GETslugRouter = require("./controllers/GETslug").router;
 
 app.use(express.static("dist"));
 app.use(express.json());
 
 app.use("/api", profileRouter);
-// app.use("/", userRouter);
-app.use("/api", articlesRouter);
-app.use("/api", tagsRouter);
-app.use("/api", slugRouter);
+// app.use("/api", userRouter);
+app.use("/api", GETarticlesRouter);
+app.use("/api", GETtagsRouter);
+app.use("/api", GETslugRouter);
 
 app.use((req, res, next) => {
   const authHeader = req.header("Authorization");
