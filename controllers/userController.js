@@ -60,7 +60,7 @@ const login = asyncHandler(async (req, res) => {
         password: user.password,
         email: user.email,
         bio: "",
-        image: "",
+        image: user.image,
         token: token,
       },
     });
