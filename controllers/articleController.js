@@ -30,9 +30,10 @@ const createArticle = async (req, res) => {
 const renderArticles = async (req, res) => {
 
     try {
-        const articles = await Article.find()
+        const articleCount = await Article.find().count()
+        const articles = await Article.find().exec()
        
-        res.json(articles.length)
+        res.json(articleCount, articles)
     } catch (err) {
         res.json({message: err})
     }
