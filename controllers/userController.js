@@ -62,6 +62,7 @@ const login = asyncHandler(async (req, res) => {
         bio: "",
         image: "",
         token: token,
+      
       },
     });
   } else {
