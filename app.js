@@ -4,9 +4,10 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors")
 const mongoose = require("mongoose")
-const usersRouter = require("./routes/users");
 const { authUser } = require("./controllers/auth");
+const usersRouter = require("./routes/users");
 const userRouter = require("./routes/user")
+const articleRouter = require("./routes/articles")
 
 const app = express()
 const PORT = 3000;
@@ -20,6 +21,7 @@ mongoose.connect(process.env.MONGO_URI)
     app.use(express.static("dist"));
     app.use("/api/users", usersRouter)
     app.use("/api/user", userRouter)
+    app.use("/api/articles", articleRouter)
     
 
     app.get("/", (_req, res) => {
