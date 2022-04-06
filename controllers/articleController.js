@@ -3,9 +3,10 @@ const { Article } = require("../models/Article")
 
 const createArticle = async (req, res) => {
     const { title, description, body, tagList } = req.body.article;
+    
 
-    const entry = new Article({title, description, body, tagList,  });
-    await entry.save();
+    const entry = new Article({title, description, body, tagList } )
+    await entry.save()
 
     res.json({
         article: {
@@ -30,12 +31,15 @@ const createArticle = async (req, res) => {
 const renderArticles = async (req, res) => {
 
     try {
-        const articleCount = await Article.find().count()
+        const articlesCount = await Article.findAll().count()
         const articles = await Article.find().exec()
+        res.json(
+            articles, articlesCount
+        )
        
-        res.json(articleCount, articles)
+        
     } catch (err) {
-        res.json({message: err})
+        res.json({message: "HEJ HEJ "})
     }
     
 }
