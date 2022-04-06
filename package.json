@@ -18,7 +18,8 @@
     "express": "^4.17.2",
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.2.9"
+    "mongoose": "^6.2.9",
+    "mongoose-slug-generator": "^1.0.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
