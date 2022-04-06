@@ -11,7 +11,7 @@ const app = express();
 const PORT = 3000;
 const JWTSECRET = "lsdkjflsdjwerd2342fsdjfytsdas";
 
-const profileRouter = require("./controllers/profile").router;
+const profileGETRouter = require("./controllers/GETprofile").router;
 const userRouter = require("./controllers/user").router;
 const GETarticlesRouter = require("./controllers/GETarticles").router;
 const GETtagsRouter = require("./controllers/GETtags").router;
@@ -20,7 +20,7 @@ const GETslugRouter = require("./controllers/GETslug").router;
 app.use(express.static("dist"));
 app.use(express.json());
 
-app.use("/api", profileRouter);
+app.use("/api", profileGETRouter);
 // app.use("/api", userRouter);
 app.use("/api", GETarticlesRouter);
 app.use("/api", GETtagsRouter);
