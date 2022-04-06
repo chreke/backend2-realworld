@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const res = require("express/lib/response");
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -14,18 +15,24 @@ userSchema.pre("save", async function (next) {
   if (this.modifiedPaths().includes("password")) {
     const hash = await bcrypt.hash(this.password, 10);
     this.password = hash;
-  }
+  } 
   next();
 });
 
-userSchema.statics.login = async function (username, password) {
-  const user = await this.findOne({ username });
+userSchema.statics.login = async function (email, password) {
+  const user = await User.findOne({ email });
   if (user && (await bcrypt.compare(password, user.password))) {
     return user;
-  }
+  } 
   return null;
 };
-
+const updateProfile = async (user, userId) => {
+  if(user.password){ 
+    const hash = await bcrypt.hash(user.password, 10);
+    user.password = hash
+  }
+  const result = await User.findOneAndUpdate({_id: userId}, user, {new: true}).select({password: false, _id: false})
+  return result
+}
 const User = mongoose.model("User", userSchema);
-
-exports.User = User;
+module.exports = {User, updateProfile};
