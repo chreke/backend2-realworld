@@ -1,9 +1,6 @@
 const express = require("express");
-const userRouter = express.Router();
-const mongoose = require("mongoose");
-const cors = require("cors");
-const User = require("../models/User");
-const { userController } = require("../controllers/userController");
+const router = express.Router();
+const { createNewUser } = require("../controllers/users");
 const {
     checkEmptyFields,
     validateUsernameAndEmail,
@@ -11,14 +8,9 @@ const {
 const { login } = require("../models/User")
 const { authUser, generateToken } = require("../controllers/auth")
 
-userRouter.post("/", checkEmptyFields, validateUsernameAndEmail, (req, res) => {
+router.post("/", checkEmptyFields, validateUsernameAndEmail, createNewUser);
 
-    userController.userCreate(req, res);
-
-
-});
-
-userRouter.post("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
     const { email, password } = req.body.user;
     const user = await login(email, password);
     //console.log(user)
@@ -32,9 +24,4 @@ userRouter.post("/login", async (req, res) => {
     }
 })
 
-userRouter.get("/user", authUser, (req, res) => {
-    const { username } = req.user;
-    res.json({ username });
-})
-
-module.exports = userRouter;
+module.exports = router;
