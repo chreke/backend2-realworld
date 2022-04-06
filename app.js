@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 const { User } = require("./models/user");
 const { Article } = require("./models/article")
-// const { Comment } = require("./models/comment")
+// const { Comment } = require("./models/comment")asdas
 
 const app = express();
 const PORT = 3000;
