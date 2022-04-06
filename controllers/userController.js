@@ -4,8 +4,13 @@ const asyncHandler = require('express-async-handler');
 
 const { User } = require('../models/User');
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' }); //expires in 30 days
+const generateToken = (user) => {
+  const userId = user._id.toString();
+  return (token = jwt.sign(
+    { userId, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: '30d', subject: userId }
+  )); //expires in 30 days
 };
 
 // const user = asyncHandler(async (req, user, next) => {
@@ -44,8 +49,8 @@ const registerUser = asyncHandler(async (req, res) => {
       username: newUser.username,
       password: newUser.password,
       email: newUser.email,
-      bio: '',
-      image: '',
+      bio: newUser.bio,
+      image: newUser.image,
       token: token,
     },
   });
@@ -78,48 +83,51 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const getMe = asyncHandler(async (req, res) => {
-  const user = await User.findOne(req.user);
-  const authHeader = req.header('Authorization');
-  const token = authHeader.split(' ')[1];
-  //console.log(user);
-
+  const user = req.user;
+  const { userId } = user;
+  const currentUser = await User.findOne({ _id: userId });
+  console.log(currentUser);
   res.json({
     user: {
-      id: user.id,
-      username: user.username,
-      image: user.image,
+      username: currentUser.username,
+      image: currentUser.image,
       email: user.email,
-      bio: '',
-      token: token,
+      bio: currentUser.bio,
+      token: req.token,
     },
   });
 });
 
-const updateUser = asyncHandler(async (req, res) => {
-  console.log('req.body.user', req.body.user);
-  const authHeader = req.header('Authorization');
-  const token = authHeader.split(' ')[1];
+// const updateUser = asyncHandler(async (req, res) => {
+//   const user = req.user;
+//   const { userId } = user;
+//   //console.log(req.body.user);
+//   const updatedUser = await User.findOneAndUpdate(
+//     { _id: userId },
+//     { username: req.body.username, email: req.body.email, bio: req.body.bio },
+//     {
+//       new: true,
+//     }
+//   );
+//   //console.log(req.body.user);
+//   console.log(updatedUser);
 
-  const updatedUser = await User.findOneAndUpdate(req.user, req.body.user, {
-    new: true,
-  });
-  //console.log(updatedUser);
-
-  res.json({
-    user: {
-      username: updatedUser.username,
-      email: updatedUser.email,
-      bio: updatedUser.bio,
-      image: updatedUser.image,
-      token: token,
-    },
-  });
-});
+//   res.json({
+//     user: {
+//       username: updatedUser.username,
+//       email: updatedUser.email,
+//       bio: updatedUser.bio,
+//       image: updatedUser.image,
+//       token: req.token,
+//       password: updatedUser.password,
+//     },
+//   });
+// });
 
 const getProfile = asyncHandler(async (req, res) => {
   const username = req.params.username;
   const user = await User.findOne({ username });
-  console.log(user);
+  //console.log(user);
   res.json({
     profile: {
       username: user.username,
@@ -128,4 +136,4 @@ const getProfile = asyncHandler(async (req, res) => {
     },
   });
 });
-module.exports = { registerUser, login, getMe, updateUser, getProfile };
+module.exports = { registerUser, login, getMe, getProfile };

@@ -1,26 +1,28 @@
 const jwt = require('jsonwebtoken');
-const asyncHandler = require('express-async-handler');
 
-const protect = asyncHandler(async (req, res, next) => {
+// const protect = (req, res, next) => {
+//   const authHeader = req.header('Authorization');
+//   const token = authHeader.split(' ')[1];
+
+//   if (token) {
+//     jwt.verify(token, process.env.JWT_SECRET, function (err, token_data) {
+//       if (err) {
+//         return res.status(400).send('error');
+//       } else {
+//         req.user_data = token_data;
+//         next();
+//       }
+//     });
+//   }
+//   next();
+// };
+const authorizeUser = (req, res, next) => {
   const authHeader = req.header('Authorization');
-  const token = authHeader.split(' ')[1];
-
-  if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, function (err, token_data) {
-      if (err) {
-        return res.status(400).send('error');
-      } else {
-        req.user_data = token_data;
-        next();
-      }
-    });
+  if (authHeader) {
+    const token = authHeader.split(' ')[1];
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    req.token = token;
   }
-
-  if (!token) {
-    // res.redirect('/api/users/login');
-    // throw new Error('Not authorized, no token');
-    return res.status(401).json({ message: 'Auth Error' });
-  }
-});
-
-module.exports = { protect };
+  next();
+};
+module.exports = { authorizeUser };
