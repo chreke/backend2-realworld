@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "APIURL=http://localhost:3000/api ./api/run-api-tests.sh",
+    "start": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +16,6 @@
     "mongodb": "^4.4.1",
     "mongoose": "^6.2.8",
     "passport": "^0.5.2"
+    "nodemon": "^2.0.15"
   }
 }

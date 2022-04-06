@@ -6,6 +6,12 @@ Projektet innehåller en server som levererar frontenden för er uppgift, samt e
 
 Starta servern genom att köra kommandot `node app.js` - ni bör nu kunna komma åt ett färdigt frontend på http://localhost:3000
 
+Kör `npm start`
+
+## Test
+
+Kör test genom att köra kommandot `npm test` - Servern behöver vara igång `npm start`
+
 ## Postman
 
 Projektet innehåller även en [Postman-collection](api/RealWorld.postman_collection.json) som ni kan använda för att
@@ -28,6 +34,22 @@ npx newman run api/RealWorld.postman_collection.json \
 - `$EMAIL` ska vara en email-address
 
 Det finns även ett shell-script som kör alla tester: [run-api-tests.sh](api/run-api-tests.sh)
+
+För att köra scriptet (i MacOS/Linux):
+
+```sh
+cd api
+./run-api-tests.sh
+```
+
+Som standard kommer scriptet att gå mot RealWorld-demo-API:t, så då bör alla
+tester passera. När ni ska köra mot er egen server (givet att den är igång på
+port 3000) kör ni scriptet så här:
+
+```sh
+APIURL=http://localhost:3000 ./run-api-tests.sh
+```
+
 
 Scriptet skapar automatiskt nya värden för `USERNAME` och `EMAIL`, vilket gör det lättare att köra upprepade gånger.
 
