@@ -35,6 +35,20 @@ app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
+app.get("/api/user", async (req, res) => {
+  userLoggedIn = req.user;
+  let user = await User
+    .find({ _id: req.user.userId })
+    .exec()
+  email = user[0].email;
+  token = user[0].token;
+  username = user[0].username;
+  bio = user[0].bio;
+  image = user[0].image;
+  user = ({ email, username, token, bio, image })
+  res.json({ user })
+});
+
 app.post("/api/users", async (req, res) => {
   const bio = "";
   const image = null;
