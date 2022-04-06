@@ -11,6 +11,7 @@ router.get("/:username", async (req, res) => {
       username: user.username,
       image: user.image,
       bio: user.bio,
+      following: user.followedBy.includes(req.user.userId),
     },
   })
 })
