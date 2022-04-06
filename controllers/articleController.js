@@ -31,15 +31,13 @@ const createArticle = async (req, res) => {
 const renderArticles = async (req, res) => {
 
     try {
-        const articlesCount = await Article.findAll().count()
+        const articlesCount = await Article.find().count()
         const articles = await Article.find().exec()
-        res.json(
-            articles, articlesCount
-        )
+        res.json( { articles, articlesCount })
        
         
     } catch (err) {
-        res.json({message: "HEJ HEJ "})
+        res.json({message: err})
     }
     
 }
