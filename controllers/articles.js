@@ -4,7 +4,7 @@ const router = express.Router();
 const { Article } = require("../models/article")
 
 
-router.get("/api/articles", async (req, res) => {
+router.get("/articles", async (req, res) => {
     let articlesCount = await Article.find().count();
     let queryParameters = {};
     if (req.query.tag !== undefined) {

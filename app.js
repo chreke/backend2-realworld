@@ -13,14 +13,16 @@ const JWTSECRET = "lsdkjflsdjwerd2342fsdjfytsdas";
 
 const profileRouter = require("./controllers/profile").router;
 const userRouter = require("./controllers/user").router;
-const profileArticles = require("./controllers/articles").router;
+const articlesRouter = require("./controllers/articles").router;
+const tagsRouter = require("./controllers/tags").router;
 
 app.use(express.static("dist"));
 app.use(express.json());
 
 app.use("/api", profileRouter);
 // app.use("/", userRouter);
-app.use("/", profileArticles);
+app.use("/api", articlesRouter);
+app.use("/api", tagsRouter);
 
 app.use((req, res, next) => {
   const authHeader = req.header("Authorization");
@@ -114,36 +116,36 @@ app.post("/api/users/login", async (req, res) => {
 //   res.json({ articles, articlesCount });
 // });
 
-function getTags(articles, articlesCount) {
+// function getTags(articles, articlesCount) {
 
-  let tags = [];
+//   let tags = [];
 
-  for (i = 0; i < articlesCount; i++) {
-    if (articles[i].tagList.length === 0) {
-      i++
-    } else {
-      for (j = 0; j < articles[i].tagList.length; j++) {
-        tags.push(articles[i].tagList[j]);
-      }
-    }
-  }
+//   for (i = 0; i < articlesCount; i++) {
+//     if (articles[i].tagList.length === 0) {
+//       i++
+//     } else {
+//       for (j = 0; j < articles[i].tagList.length; j++) {
+//         tags.push(articles[i].tagList[j]);
+//       }
+//     }
+//   }
 
-  function removeDuplicates(data) {
-    return data.filter((value, index) => data.indexOf(value) === index);
-  }
-  tags = removeDuplicates(tags);
-  return tags
-}
+//   function removeDuplicates(data) {
+//     return data.filter((value, index) => data.indexOf(value) === index);
+//   }
+//   tags = removeDuplicates(tags);
+//   return tags
+// }
 
-app.get("/api/tags", async (req, res) => {
-  let articlesCount = await Article.find().count();
-  const articles = await Article
-    .find({})
-    .populate("author")
-    .exec();
-  tags = getTags(articles, articlesCount)
-  res.json({ tags })
-});
+// app.get("/api/tags", async (req, res) => {
+//   let articlesCount = await Article.find().count();
+//   const articles = await Article
+//     .find({})
+//     .populate("author")
+//     .exec();
+//   tags = getTags(articles, articlesCount)
+//   res.json({ tags })
+// });
 
 function slugTitle(title) {
   let slugTitle = "";
@@ -178,7 +180,7 @@ app.get("/api/articles/:slug", async (req, res) => {
     .populate("author")
     .exec()
   article = article[0];
-  //console.log(article[0])
+
   res.json({ article })
 })
 
@@ -204,7 +206,7 @@ app.put("/api/user", requireLogin, async (req, res) => {
   console.log(email, username, password, image, bio)
   console.log(user)
 
-  User.findOneAndUpdate(filter, {$set: {email: email, username: username, password: password, image: image, bio:bio}}, {new: true}, (err, doc) => {
+  User.findOneAndUpdate(filter, { $set: { email: email, username: username, password: password, image: image, bio: bio } }, { new: true }, (err, doc) => {
     if (err) {
       console.log("Something wrong when updating data!")
     }
