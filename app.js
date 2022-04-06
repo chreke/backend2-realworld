@@ -200,19 +200,19 @@ app.post("/api/articles", requireLogin, async (req, res) => {
 
 app.put("/api/user", requireLogin, async (req, res) => {
   const { email, username, image, bio } = req.body.user
-  const { password } = req.body.user
 
   const user = req.user.userId
   const filter = { _id: `${user}` }
 
-  console.log(email, username, password, image, bio)
+  console.log(email, username, image, bio)
   console.log(user)
 
-  User.findOneAndUpdate(filter, { $set: { email: email, username: username, password: password, image: image, bio: bio } }, { new: true }, (err, doc) => {
+
+  User.findOneAndUpdate(filter, {$set: {email: email, username: username, bio:bio}}, {new: true}, (err, doc) => {
     if (err) {
       console.log("Something wrong when updating data!")
     }
-    res.redirect("/api/")
+    res.json({user})
   })
 })
 
