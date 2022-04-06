@@ -11,8 +11,12 @@ const app = express();
 const PORT = 3000;
 const JWTSECRET = "lsdkjflsdjwerd2342fsdjfytsdas";
 
+const profileRouter = require("./controllers/profile").router;
+
 app.use(express.static("dist"));
 app.use(express.json());
+
+app.use("/api", profileRouter);
 
 app.use((req, res, next) => {
   const authHeader = req.header("Authorization");
@@ -45,7 +49,7 @@ app.get("/api/user", async (req, res) => {
   username = user[0].username;
   bio = user[0].bio;
   image = user[0].image;
-  user = ({ email, username, token, bio, image })
+  user = ({ user, username, token, bio, image })
   res.json({ user })
 });
 
@@ -81,15 +85,11 @@ app.post("/api/users/login", async (req, res) => {
       JWTSECRET,
       { expiresIn: "2 h", subject: userId }
     );
-    //console.log(token);
-    //console.log(user.token)
     await User.updateOne({ username: user.username }, { token: token })
     username = user.username;
     bio = user.bio;
     image = user.image;
-    //console.log(email, username, token, bio, image);
     user = ({ email, username, token, bio, image })
-    //console.log(user);
     res.json({ user });
   } else {
     res.sendStatus(401);
