@@ -1,11 +1,12 @@
 const { Article } = require("../models/Article")
 
 
+
 const createArticle = async (req, res) => {
     const { title, description, body, tagList } = req.body.article;
     
 
-    const entry = new Article({title, description, body, tagList } )
+    const entry = new Article({title, description, body, tagList, author: req.user.userId } )
     await entry.save()
 
     res.json({

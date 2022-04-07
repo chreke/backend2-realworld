@@ -38,6 +38,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email: email,
     bio: '',
     image: 'https://i.stack.imgur.com/34AD2.jpg',
+
   });
 
   const newUser = await user.save();
@@ -72,8 +73,9 @@ const login = asyncHandler(async (req, res) => {
         username: user.username,
         password: user.password,
         email: user.email,
-        bio: '',
-        image: '',
+        bio: "",
+        image: user.image,
+
         token: token,
       },
     });
@@ -92,7 +94,7 @@ const getMe = asyncHandler(async (req, res) => {
     user: {
       username: currentUser.username,
       image: currentUser.image,
-      email: user.email,
+      email: currentUser.email,
       bio: currentUser.bio,
       token: req.token,
     },
@@ -131,9 +133,12 @@ const getProfile = asyncHandler(async (req, res) => {
   //console.log(user);
   res.json({
     profile: {
+      
       username: user.username,
       bio: user.bio,
-      image: user.image,
+      image: user.image
+      
+      
     },
   });
 });
