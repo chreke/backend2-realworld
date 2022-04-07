@@ -33,15 +33,6 @@ app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
-// req.user exists if JWT Token Check == OK 
-const requireLogin = (req, res, next) => {
-  if (req.user) {
-    next()
-  } else {
-    res.sendStatus(401); // 401 - Unauthorized
-  }
-}
-
 // -- JWT Token Check
 app.use((req, _res, next) => {
   const authHeader = req.header("Authorization");
