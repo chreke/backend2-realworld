@@ -6,6 +6,12 @@ const route = Router();
 
 const { User } = require("../../models/userSchema");
 
+const jwt = require("jsonwebtoken");
+
+const token = require("../../token.js")
+const JWT_SECRET = token.SECRET
+
+
 // -----GET-----
 // route.get("/", (req,res) => {
 //     res.send({
@@ -18,7 +24,7 @@ const { User } = require("../../models/userSchema");
 // })
 
 // CURRENT USER - Fake response - it works
-route.get("/", (req,res) => {
+route.get("/", (req, res) => {
     res.send({
         "user": {
             "username": req.body.user.username,
@@ -70,16 +76,18 @@ route.post("/", async (req, res) => {
     console.log("register:")
     console.log(req.body)
     var user = new User(req.body)
-    
+
     user.username = req.body.user.username;
     user.email = req.body.user.email;
     user.password = req.body.user.password;
+    // sätter token till en tom sträng (för testen krever det)
+    user.token = ""
 
     console.log("user:")
     console.log(user)
-    
+
     await user.save();
-    res.send({user});
+    res.send({ user });
 })
 
 module.exports = route;
@@ -93,7 +101,6 @@ module.exports = route;
 //     res.send(`Username: ${username} Password: ${email}`);
 // });
 
-//
 // LOGIN USER - it works!
 route.post('/login', async (req, res) => {
     const email = req.body.user.email;
@@ -102,14 +109,14 @@ route.post('/login', async (req, res) => {
     const loggedInUser = await User.findOne({ email });
     console.log(loggedInUser)
 
-    if(!req.body.user.email){
-        return res.status(422).json({errors: {email: "can't be blank"}});
-      }
-    
-      if(!req.body.user.password){
-        return res.status(422).json({errors: {password: "can't be blank"}});
-      }
-    if(loggedInUser.password !== password || loggedInUser.email !== email) {
+    if (!req.body.user.email) {
+        return res.status(422).json({ errors: { email: "can't be blank" } });
+    }
+
+    if (!req.body.user.password) {
+        return res.status(422).json({ errors: { password: "can't be blank" } });
+    }
+    if (loggedInUser.password !== password || loggedInUser.email !== email) {
         res.status(403);
         res.json({
             message: "Invalid login",
@@ -117,20 +124,33 @@ route.post('/login', async (req, res) => {
         return;
     }
     console.log(req.body)
+
+    // Använder JWT sign för att skapa en token
+    const token = jwt.sign(
+        // info som vi sparar i vår token 
+        { username: loggedInUser.username, email: loggedInUser.email },
+        JWT_SECRET,
+        { expiresIn: "24h", subject: loggedInUser.email }
+    );
+
+    // sparar token i databasen
+    loggedInUser.token = token
+    await loggedInUser.save()
+
     const user = {
         email: loggedInUser.email,
         username: loggedInUser.username,
         bio: loggedInUser.bio,
         image: loggedInUser.image,
-        token: loggedInUser.token,
+        token: token,
     }
     res.json({ user: user });
     console.log(user)
     // res.json({
     //     message: "Login succesfull",
     // });
-    
+
     // res.send(`Password: ${password} Password: ${email}`);
-    
+
 });
 
