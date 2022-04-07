@@ -44,4 +44,26 @@ const getSingleArticleBySlug = asyncHandler(async (req, res) => {
   const article = await Article.findOne({ slug }).populate('author').exec();
   res.json({ article });
 });
-module.exports = { createArticle, renderArticles, getSingleArticleBySlug };
+
+const updateArticle = asyncHandler(async (req, res) => {
+  const slug = req.params.slug;
+  //const article = await Article.findOne({ slug });
+  //const article = await Article.updateOne({ slug }, { body: req.body.body });
+  //article.save();
+  const article = await Article.findOne({ slug });
+  const { title, description, body, tagList } = req.body.article;
+  console.log(req.body);
+  article.title = title;
+  article.description = description;
+  article.body = body;
+  article.tagList = tagList;
+  await article.save();
+
+  res.json({ article });
+});
+module.exports = {
+  createArticle,
+  renderArticles,
+  getSingleArticleBySlug,
+  updateArticle,
+};
