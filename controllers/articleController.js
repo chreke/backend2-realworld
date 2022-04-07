@@ -1,4 +1,5 @@
 const { Article } = require("../models/Article")
+const { User } =require("../models/User")
 
 
 
@@ -27,6 +28,19 @@ const createArticle = async (req, res) => {
 
 }
 
+const renderArticlesAuthor = async (req,res) => {
+    try {
+        const author = req.query.author
+    const user = await User.findOne({usename: author})
+    const articlesCount = await Article.find({author: user._id}).count()
+    const articles = await Article.find({author: user._id})
+    res.json({articles, articlesCount})
+    } catch (err) {
+        res.json({message: err})
+    }
+    
+}
+
 
 
 const renderArticles = async (req, res) => {
@@ -44,4 +58,4 @@ const renderArticles = async (req, res) => {
 }
 
 
-module.exports =  { createArticle, renderArticles }
+module.exports =  { createArticle, renderArticles, renderArticlesAuthor }
