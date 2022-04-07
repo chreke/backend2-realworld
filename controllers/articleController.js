@@ -28,34 +28,32 @@ const createArticle = async (req, res) => {
 
 }
 
-const renderArticlesAuthor = async (req,res) => {
-    try {
-        const author = req.query.author
-    const user = await User.findOne({usename: author})
-    const articlesCount = await Article.find({author: user._id}).count()
-    const articles = await Article.find({author: user._id})
-    res.json({articles, articlesCount})
-    } catch (err) {
-        res.json({message: err})
-    }
-    
-}
-
-
 
 const renderArticles = async (req, res) => {
+    const author = req.query.author
 
-    try {
-        const articlesCount = await Article.find().count()
-        const articles = await Article.find().sort('-createdAt').exec()
-        res.json( { articles, articlesCount })
-       
-        
-    } catch (err) {
-        res.json({message: err})
+    if(author){
+        try {
+            const user = await User.findOne({username: author})
+            const articlesCount = await Article.find({author: user._id}).count()
+            const articles = await Article.find({author: user._id})
+            res.json({articles, articlesCount})
+        } catch (err) {
+            res.json({message: err})
+        }
+    } else {
+        try {
+            const articlesCount = await Article.find().count()
+            const articles = await Article.find().sort('-createdAt').exec()
+            res.json( { articles, articlesCount })
+           
+            
+        } catch (err) {
+            res.json({message: err})
+        }
     }
-    
+
 }
 
 
-module.exports =  { createArticle, renderArticles, renderArticlesAuthor }
+module.exports =  { createArticle, renderArticles }
