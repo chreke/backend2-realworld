@@ -8,7 +8,9 @@ const { User } = require("../../models/userSchema");
 
 const jwt = require("jsonwebtoken");
 
-const JWT_SECRET = "34567hthgfkjfhgsfesghfgjhmcvcgn";
+const token = require("../../token.js")
+const JWT_SECRET = token.SECRET
+
 
 // -----GET-----
 // route.get("/", (req,res) => {

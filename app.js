@@ -5,7 +5,10 @@ const path = require("path");
 
 const jwt = require("jsonwebtoken");
 
-const JWT_SECRET = "34567hthgfkjfhgsfesghfgjhmcvcgn";
+
+const token = require("./token.js")
+const JWT_SECRET = token.SECRET
+
 
 // Connection to MongoDB Atlas
 const mongoose = require("mongoose");
@@ -30,7 +33,6 @@ app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
-// "requireLogin" behöver lämna hos Create Article och Update Article for check token
 // req.user exists if JWT Token Check == OK 
 const requireLogin = (req, res, next) => {
   if (req.user) {
