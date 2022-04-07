@@ -47,12 +47,10 @@ const getSingleArticleBySlug = asyncHandler(async (req, res) => {
 
 const updateArticle = asyncHandler(async (req, res) => {
   const slug = req.params.slug;
-  //const article = await Article.findOne({ slug });
-  //const article = await Article.updateOne({ slug }, { body: req.body.body });
-  //article.save();
+
   const article = await Article.findOne({ slug });
   const { title, description, body, tagList } = req.body.article;
-  console.log(req.body);
+
   article.title = title;
   article.description = description;
   article.body = body;
