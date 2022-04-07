@@ -101,37 +101,6 @@ const getMe = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  // const user = req.user;
-  // const { userId } = user;
-  //console.log(req.body.user);
-  // const updatedUser = await User.findOneAndUpdate(
-  //   { _id: userId },
-  //   { username: req.body.username, email: req.body.email, bio: req.body.bio }
-  //   // {
-  //   //   new: true,
-  //   // }
-  // );
-  // //console.log(req.body.user);
-  // const updatedUser = await User.findOne({ user: req.user });
-  // console.log('updateUser to update', updateUser);
-  // updatedUser.email = req.body.user.email;
-  // updatedUser.username = req.body.user.username;
-  // updatedUser.bio = req.body.user.bio;
-  // await updatedUser.save();
-
-  // console.log(updatedUser);
-
-  // res.json({
-  //   user: {
-  //     username: updatedUser.username,
-  //     email: updatedUser.email,
-  //     bio: updatedUser.bio,
-  //     image: updatedUser.image,
-  //     token: req.token,
-  //     password: updatedUser.password,
-  //   },
-  // });
-
   const user = req.user;
   const { userId } = user;
   const updatedUser = await User.findOne({ _id: userId });
