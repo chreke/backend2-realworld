@@ -38,7 +38,6 @@ const registerUser = asyncHandler(async (req, res) => {
     email: email,
     bio: '',
     image: 'https://i.stack.imgur.com/34AD2.jpg',
-
   });
 
   const newUser = await user.save();
@@ -73,7 +72,7 @@ const login = asyncHandler(async (req, res) => {
         username: user.username,
         password: user.password,
         email: user.email,
-        bio: "",
+        bio: '',
         image: user.image,
 
         token: token,
@@ -101,31 +100,58 @@ const getMe = asyncHandler(async (req, res) => {
   });
 });
 
-// const updateUser = asyncHandler(async (req, res) => {
-//   const user = req.user;
-//   const { userId } = user;
-//   //console.log(req.body.user);
-//   const updatedUser = await User.findOneAndUpdate(
-//     { _id: userId },
-//     { username: req.body.username, email: req.body.email, bio: req.body.bio },
-//     {
-//       new: true,
-//     }
-//   );
-//   //console.log(req.body.user);
-//   console.log(updatedUser);
+const updateUser = asyncHandler(async (req, res) => {
+  // const user = req.user;
+  // const { userId } = user;
+  //console.log(req.body.user);
+  // const updatedUser = await User.findOneAndUpdate(
+  //   { _id: userId },
+  //   { username: req.body.username, email: req.body.email, bio: req.body.bio }
+  //   // {
+  //   //   new: true,
+  //   // }
+  // );
+  // //console.log(req.body.user);
+  // const updatedUser = await User.findOne({ user: req.user });
+  // console.log('updateUser to update', updateUser);
+  // updatedUser.email = req.body.user.email;
+  // updatedUser.username = req.body.user.username;
+  // updatedUser.bio = req.body.user.bio;
+  // await updatedUser.save();
 
-//   res.json({
-//     user: {
-//       username: updatedUser.username,
-//       email: updatedUser.email,
-//       bio: updatedUser.bio,
-//       image: updatedUser.image,
-//       token: req.token,
-//       password: updatedUser.password,
-//     },
-//   });
-// });
+  // console.log(updatedUser);
+
+  // res.json({
+  //   user: {
+  //     username: updatedUser.username,
+  //     email: updatedUser.email,
+  //     bio: updatedUser.bio,
+  //     image: updatedUser.image,
+  //     token: req.token,
+  //     password: updatedUser.password,
+  //   },
+  // });
+
+  const user = req.user;
+  const { userId } = user;
+  const updatedUser = await User.findOne({ _id: userId });
+
+  updatedUser.image = req.body.user.image;
+  updatedUser.username = req.body.user.username;
+  updatedUser.email = req.body.user.email;
+  updatedUser.bio = req.body.user.bio;
+  updatedUser.save();
+
+  res.json({
+    user: {
+      image: updatedUser.image,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      bio: updatedUser.bio,
+      token: req.token,
+    },
+  });
+});
 
 const getProfile = asyncHandler(async (req, res) => {
   const username = req.params.username;
@@ -133,13 +159,10 @@ const getProfile = asyncHandler(async (req, res) => {
   //console.log(user);
   res.json({
     profile: {
-      
       username: user.username,
       bio: user.bio,
-      image: user.image
-      
-      
+      image: user.image,
     },
   });
 });
-module.exports = { registerUser, login, getMe, getProfile };
+module.exports = { registerUser, login, getMe, getProfile, updateUser };
