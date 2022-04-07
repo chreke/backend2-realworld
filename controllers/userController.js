@@ -37,7 +37,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password: password,
     email: email,
     bio: "",
-    image: "/images/profilePic.jpg"
+    image: "./images/profilePic.jpg"
   });
 
   const newUser = await user.save();
@@ -73,7 +73,7 @@ const login = asyncHandler(async (req, res) => {
         password: user.password,
         email: user.email,
         bio: "",
-        image: "",
+        image: user.image,
         token: token,
       },
     });
@@ -92,7 +92,7 @@ const getMe = asyncHandler(async (req, res) => {
     user: {
       username: currentUser.username,
       image: currentUser.image,
-      email: user.email,
+      email: currentUser.email,
       bio: currentUser.bio,
       token: req.token,
     },
@@ -131,9 +131,12 @@ const getProfile = asyncHandler(async (req, res) => {
   //console.log(user);
   res.json({
     profile: {
+      
       username: user.username,
       bio: user.bio,
-      image: user.image,
+      image: user.image
+      
+      
     },
   });
 });
