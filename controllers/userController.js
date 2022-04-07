@@ -36,14 +36,15 @@ const registerUser = asyncHandler(async (req, res) => {
     username: username,
     password: password,
     email: email,
-    bio: "",
-    image: "./images/profilePic.jpg"
+    bio: '',
+    image: 'https://i.stack.imgur.com/34AD2.jpg',
+
   });
 
   const newUser = await user.save();
 
   //generate a token then pass it when a new user creates and login
-  const token = generateToken(newUser._id);
+  const token = generateToken(newUser);
 
   res.json({
     user: {
@@ -64,7 +65,7 @@ const login = asyncHandler(async (req, res) => {
   console.log(user);
 
   if (user && (await bcrypt.compare(password, user.password))) {
-    const token = generateToken(user._id);
+    const token = generateToken(user);
     console.log(typeof token); //string
 
     return res.json({
@@ -74,6 +75,7 @@ const login = asyncHandler(async (req, res) => {
         email: user.email,
         bio: "",
         image: user.image,
+
         token: token,
       },
     });
