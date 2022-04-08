@@ -6,12 +6,8 @@ const articleSchema = mongoose.Schema({
     slug: {type: String, required: true, unique: true},
     body: {type: String, required: true},
     description: {type: String, required: true},
-    favorited:[
-        {
-            username: String,
-            type: Boolean, default: false
-        }
-    ],
+    favorited: {type: Boolean, default: false},
+    favoritedBy: [],
     favoritesCount: {type: Number, default: 0},
     author: {type: String},
     tagList: [],
@@ -27,13 +23,15 @@ const createArticle = async (article, user) => {
 const getAllArticle = async() => {
     return await Article.find()  
 }
-const findArticlesQuery = async(query) => {
+const findArticlesQuery = async(query, username) => {
     if(query.tag !== undefined){
         return await Article.find({tagList: query.tag})
     } else if(query.author !== undefined){
         return await Article.find(query)
     }else if (query.favorited !== undefined){
-        return await Article.find(query)
+        const article = await Article.find({favoritedBy: username}).select({favoritedBy: false})
+        article.forEach(item => item.favorited = true)
+        return article
     }else {
         return await Article.find()
     }
@@ -48,22 +46,26 @@ const findOneAndUpdateArticle = async(slug, article) => {
 }
 const findAllTags = async() => {
     return await Article.find().select({tagList: true, _id: false})
-} 
-const favoriteArticle = async(slug, req) => {
-    const article = await Article.findOne(slug)
-    console.log(req.user)
-    if(article.favorited === true){
-        return "you have already Liked"
-    }
-    return await Article.findOneAndUpdate(slug, {favoritedCounts: {$size: "$favorited"}, favorited: req.user.username})
-    /* return await Article.findOneAndUpdate(slug, {$inc: {favoritesCount: +1}, favorited: true}, {new: true}) */
 }
-const unFavoriteArticle = async(slug, req) => {
+const favoriteArticle = async(slug, user) => {
     const article = await Article.findOne(slug)
-    if(article.favorited === false){
-        return "you have already unliked"
+    if(article.favoritedBy.includes(user.username) === true){
+        return "you have already liked"
+    }else {
+        const articles = await Article.findOneAndUpdate(slug, {$addToSet: {favoritedBy: user.username}, $inc: {favoritesCount: +1}}, {new: true}).select({favoritedBy: false})
+        articles.favorited = true
+        return articles
     }
-    /* return await Article.findOneAndUpdate(slug, {$inc: {favoritesCount: -1}, favorited: false}, {new: true}) */
-    return await Article.findOneAndUpdate(slug, {favoritedCounts: {$size: "$favorited"}, favorited: req.user.username})
+}
+const unFavoriteArticle = async(slug, user) => {
+    const article = await Article.findOne(slug)
+    if(article.favoritedBy.includes(user.username) === false){
+        return "you have already unliked"
+    }else {
+        return await Article.findOneAndUpdate(slug, {$pull: {favoritedBy: user.username}, $inc: {favoritesCount: -1}}, {new: true}).select({favoritedBy: false})
+    } 
 } 
-module.exports = { createArticle, getAllArticle, findArticlesQuery, findOneArticle,findOneAndUpdateArticle, findAllTags, favoriteArticle,unFavoriteArticle }
+const deleteArticle = async(slug, username) => {
+    return await Article.findOneAndDelete({slug: slug, username: username})
+}
+module.exports = {deleteArticle, createArticle, getAllArticle, findArticlesQuery, findOneArticle,findOneAndUpdateArticle, findAllTags, favoriteArticle,unFavoriteArticle }
