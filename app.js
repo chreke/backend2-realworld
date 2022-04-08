@@ -21,13 +21,6 @@ const POSTuserRouter = require("./controllers/POSTuser").router;
 app.use(express.static("dist"));
 app.use(express.json());
 
-// app.use("/api", GETprofileRouter);
-// app.use("/api", GetuserRouter);
-// app.use("/api", GETarticlesRouter);
-// app.use("/api", GETtagsRouter);
-// app.use("/api", GETslugRouter);
-// app.use("/api", POSTuserRouter);
-
 app.use((req, res, next) => {
   const authHeader = req.header("Authorization");
   if (authHeader) {
