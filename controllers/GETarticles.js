@@ -6,28 +6,24 @@ const { User } = require("../models/user");
 
 router.get("/articles", async (req, res) => {
     let articlesCount = await Article.find().count();
-    let articles = {};
+    let queryParameters = {};
 
     if (req.query.tag !== undefined) {
-        articles = await Article
-            .find({ tagList: req.query.tag })
-            .sort('-createdAt')
-            .populate("author")
-            .exec()
+        queryParameters = { tagList: req.query.tag }
     }
     else if (req.query.author !== undefined) {
         const user = await User.findOne({ username: req.query.author })
-        articles = await Article.find({ author: user._id })
-
-    } else {
-        articles = await Article
-            .find({})
-            .sort('-createdAt')
-            .populate("author")
-            .exec()
+        queryParameters = { author: user._id }
     }
+    console.log(queryParameters);
+    let articles = await Article
+        .find(queryParameters)
+        .sort('-createdAt')
+        .populate("author")
     res.json({ articles, articlesCount });
 
 });
 
 exports.router = router;
+
+
