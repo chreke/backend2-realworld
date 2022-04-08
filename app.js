@@ -17,6 +17,7 @@ const GETarticlesRouter = require("./controllers/GETarticles").router;
 const GETtagsRouter = require("./controllers/GETtags").router;
 const GETslugRouter = require("./controllers/GETslug").router;
 const POSTuserRouter = require("./controllers/POSTuser").router;
+const POSTloginRouter = require("./controllers/POSTlogin").router;
 
 app.use(express.static("dist"));
 app.use(express.json());
@@ -49,6 +50,7 @@ app.use("/api", GETtagsRouter);
 app.use("/api", GETslugRouter);
 app.use("/api", GetuserRouter);
 app.use("/api", POSTuserRouter);
+app.use("/api", POSTloginRouter);
 
 // app.get("/api/user", async (req, res) => {
 //   userLoggedIn = req.user;
@@ -86,26 +88,26 @@ app.use("/api", POSTuserRouter);
 //   }
 // });
 
-app.post("/api/users/login", async (req, res) => {
-  const { email, password } = req.body.user;
-  let user = await User.login(email, password);
-  if (user) {
-    const userId = user._id.toString();
-    const token = jwt.sign(
-      { userId, username: user.username },
-      JWTSECRET,
-      { expiresIn: "2 h", subject: userId }
-    );
-    await User.updateOne({ username: user.username }, { token: token })
-    username = user.username;
-    bio = user.bio;
-    image = user.image;
-    user = ({ email, username, token, bio, image })
-    res.json({ user });
-  } else {
-    res.sendStatus(401);
-  }
-});
+// app.post("/api/users/login", async (req, res) => {
+//   const { email, password } = req.body.user;
+//   let user = await User.login(email, password);
+//   if (user) {
+//     const userId = user._id.toString();
+//     const token = jwt.sign(
+//       { userId, username: user.username },
+//       JWTSECRET,
+//       { expiresIn: "2 h", subject: userId }
+//     );
+//     await User.updateOne({ username: user.username }, { token: token })
+//     username = user.username;
+//     bio = user.bio;
+//     image = user.image;
+//     user = ({ email, username, token, bio, image })
+//     res.json({ user });
+//   } else {
+//     res.sendStatus(401);
+//   }
+// });
 
 // app.get("/api/articles", async (req, res) => {
 //   let articlesCount = await Article.find().count();
