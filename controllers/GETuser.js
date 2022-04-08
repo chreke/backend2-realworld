@@ -14,7 +14,7 @@ router.get("/user", async (req, res) => {
     username = user[0].username;
     bio = user[0].bio;
     image = user[0].image;
-    user = ({ user, username, token, bio, image })
+    user = ({ email, token, username, bio, image })
     res.json({ user })
 });
 

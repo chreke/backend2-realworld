@@ -17,7 +17,10 @@ const GETslugRouter = require("./controllers/GETslug").router;
 const POSTuserRouter = require("./controllers/POSTuser").router;
 const POSTloginRouter = require("./controllers/POSTlogin").router;
 const POSTarticlesRouter = require("./controllers/POSTarticles").router;
+const POSTfavoriteRouter = require("./controllers/POSTfavorite").router;
 const PUTuserRouter = require("./controllers/PUTuser").router;
+const DELETEfavoriteRouter = require("./controllers/DELETEfavorite").router;
+
 
 app.use(express.static("dist"));
 app.use(express.json());
@@ -45,6 +48,8 @@ app.use("/api", POSTuserRouter);
 app.use("/api", POSTloginRouter);
 app.use("/api", POSTarticlesRouter);
 app.use("/api", PUTuserRouter);
+app.use("/api", POSTfavoriteRouter);
+app.use("/api", DELETEfavoriteRouter);
 
 mongoose.connect("mongodb://localhost/backend2_GroupProject");
 

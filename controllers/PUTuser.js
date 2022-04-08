@@ -23,7 +23,7 @@ router.put("/user", requireLogin, async (req, res) => {
 
     User.findOneAndUpdate(filter, { $set: { email: email, username: username, password: password, image: image, bio: bio } }, { new: true }, (err, doc) => {
         if (err) {
-            console.log("Something wrong when updating data!")
+            console.log("Something went wrong when updating data!")
         }
         res.redirect("/")
     })
