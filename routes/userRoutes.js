@@ -12,6 +12,6 @@ const {
 router.post('/api/users', registerUser);
 router.post('/api/users/login', login);
 router.get('/api/user', getMe);
-//router.put('/api/user', updateUser);
+router.put('/api/user', updateUser);
 router.get('/api/profiles/:username', getProfile);
 module.exports = router;
