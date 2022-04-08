@@ -12,7 +12,7 @@ const requireLogin = (req, res, next) => {
 };
 
 router.post("/articles/:slug/favorite", requireLogin, async (req, res) => {
-    console.log("HÄR")
+    console.log("FAVORIT")
     let favorite = req.params.slug;
     console.log(favorite);
     await Article.updateOne({ slug: favorite }, { favorited: true, favoritesCount: +1 })
@@ -23,7 +23,7 @@ router.post("/articles/:slug/favorite", requireLogin, async (req, res) => {
         .exec();
     article = article[0];
     res.json({ article });
-    console.log(article);
+    // console.log(article)
 })
 
 
