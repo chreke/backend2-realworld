@@ -41,7 +41,7 @@ const getSingleArticleBySlug = asyncHandler(async (req, res) => {
   const article = await Article.findOne({ slug }).populate('author').exec();
   res.json({ article });
 });
-=======
+
 const renderArticles = async (req, res) => {
     const author = req.query.author
 
