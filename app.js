@@ -18,6 +18,7 @@ const GETtagsRouter = require("./controllers/GETtags").router;
 const GETslugRouter = require("./controllers/GETslug").router;
 const POSTuserRouter = require("./controllers/POSTuser").router;
 const POSTloginRouter = require("./controllers/POSTlogin").router;
+const POSTarticlesRouter = require("./controllers/POSTarticles").router;
 
 app.use(express.static("dist"));
 app.use(express.json());
@@ -51,6 +52,7 @@ app.use("/api", GETslugRouter);
 app.use("/api", GetuserRouter);
 app.use("/api", POSTuserRouter);
 app.use("/api", POSTloginRouter);
+app.use("/api", POSTarticlesRouter);
 
 // app.get("/api/user", async (req, res) => {
 //   userLoggedIn = req.user;
@@ -154,31 +156,31 @@ app.use("/api", POSTloginRouter);
 //   res.json({ tags })
 // });
 
-function slugTitle(title) {
-  let slugTitle = "";
-  array = title.toLowerCase().split(" ");
-  lastChar = array[array.length - 1]
-  map = array.map(item => item + "-");
-  map.splice(map.length - 1, 1, lastChar);
-  map.forEach(item => {
-    slugTitle = slugTitle + item;
-  })
-  return slugTitle
-};
+// function slugTitle(title) {
+//   let slugTitle = "";
+//   array = title.toLowerCase().split(" ");
+//   lastChar = array[array.length - 1]
+//   map = array.map(item => item + "-");
+//   map.splice(map.length - 1, 1, lastChar);
+//   map.forEach(item => {
+//     slugTitle = slugTitle + item;
+//   })
+//   return slugTitle
+// };
 
 
-app.post("/api/articles", requireLogin, async (req, res) => {
-  const { title, description, body, tagList } = req.body.article
-  const user = req.user
-  let slug = slugTitle(title);
-  const article = new Article({ title, description, body, author: user.userId, slug, tagList: tagList.sort() })
-  await article.save()
-  if (user) {
-    res.json({ article })
-  } else {
-    res.sendStatus(401)
-  }
-})
+// app.post("/api/articles", requireLogin, async (req, res) => {
+//   const { title, description, body, tagList } = req.body.article
+//   const user = req.user
+//   let slug = slugTitle(title);
+//   const article = new Article({ title, description, body, author: user.userId, slug, tagList: tagList.sort() })
+//   await article.save()
+//   if (user) {
+//     res.json({ article })
+//   } else {
+//     res.sendStatus(401)
+//   }
+// })
 
 // app.get("/api/articles/:slug", async (req, res) => {
 //   const slug = req.params.slug;
