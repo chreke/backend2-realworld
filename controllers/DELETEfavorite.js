@@ -12,7 +12,7 @@ const requireLogin = (req, res, next) => {
 };
 
 router.delete("/articles/:slug/favorite", requireLogin, async (req, res) => {
-    console.log("HÄRdelete")
+    console.log("DELETE")
     let favorite = req.params.slug;
     console.log(favorite);
     await Article.updateOne({ slug: favorite }, { favorited: false, favoritesCount: 0 })
@@ -23,7 +23,6 @@ router.delete("/articles/:slug/favorite", requireLogin, async (req, res) => {
         .exec();
     article = article[0];
     res.json({ article });
-    console.log(article);
 })
 
 

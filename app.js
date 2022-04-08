@@ -10,7 +10,7 @@ const PORT = 3000;
 const JWTSECRET = "lsdkjflsdjwerd2342fsdjfytsdas";
 
 const GETprofileRouter = require("./controllers/GETprofile").router;
-const GetuserRouter = require("./controllers/GETuser").router;
+const GETuserRouter = require("./controllers/GETuser").router;
 const GETarticlesRouter = require("./controllers/GETarticles").router;
 const GETtagsRouter = require("./controllers/GETtags").router;
 const GETslugRouter = require("./controllers/GETslug").router;
@@ -39,11 +39,10 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/api", GETprofileRouter);
-app.use("/api", GetuserRouter);
+app.use("/api", GETuserRouter);
 app.use("/api", GETarticlesRouter);
 app.use("/api", GETtagsRouter);
 app.use("/api", GETslugRouter);
-app.use("/api", GetuserRouter);
 app.use("/api", POSTuserRouter);
 app.use("/api", POSTloginRouter);
 app.use("/api", POSTarticlesRouter);
