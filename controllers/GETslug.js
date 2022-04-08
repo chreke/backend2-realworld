@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/api/articles/:slug", async (req, res) => {
+const { Article } = require("../models/article")
+
+router.get("/articles/:slug", async (req, res) => {
     const slug = req.params.slug;
     let article = await Article
         .find({ slug: slug })
