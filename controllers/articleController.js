@@ -78,7 +78,7 @@ const updateArticle = asyncHandler(async (req, res) => {
   article.body = req.body.article.body;
   article.tagList = req.body.article.tagList;
   await article.save();
-  console.log(article);
+  
 
   res.json({ article });
 });

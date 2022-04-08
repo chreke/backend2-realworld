@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const asyncHandler = require('express-async-handler');
 
 const { User } = require('../models/User');
+const { redirect } = require('express/lib/response');
 
 const generateToken = (user) => {
   const userId = user._id.toString();
@@ -61,7 +62,7 @@ const registerUser = asyncHandler(async (req, res) => {
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body.user;
   const user = await User.findOne({ email });
-  console.log(user);
+  
 
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = generateToken(user);
@@ -85,7 +86,8 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const getMe = asyncHandler(async (req, res) => {
-  const user = req.user;
+  const user = req.user.username;
+  console.log(user)
   const { userId } = user;
   const currentUser = await User.findOne({ _id: userId });
 
@@ -103,29 +105,47 @@ const getMe = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
   const user = req.user;
   const { userId } = user;
-  const updatedUser = await User.findOne({ _id: userId });
+  console.log(userId)
+  // const updatedUser = await User.findOne({ _id: userId });
 
-  updatedUser.image = req.body.user.image;
-  updatedUser.username = req.body.user.username;
-  updatedUser.email = req.body.user.email;
-  updatedUser.bio = req.body.user.bio;
-  updatedUser.save();
+  // updatedUser.image = req.body.user.image;
+  // updatedUser.username = req.body.user.username;
+  // updatedUser.email = req.body.user.email;
+  // updatedUser.bio = req.body.user.bio;
+  // updateUser.password = req.body.user.password
+  
+  // updatedUser.save();
+  let password = req.body.user.password
+
+  const hash = await bcrypt.hash(password, 10);
+  password = hash;
+
+  await User.findByIdAndUpdate(
+    userId, { 
+      image: req.body.user.image, 
+      username: req.body.user.username, 
+      email: req.body.user.email, 
+      bio: req.body.user.bio,
+      password
+    }, { new: true } )
+
 
   res.json({
     user: {
-      image: updatedUser.image,
-      username: updatedUser.username,
-      email: updatedUser.email,
-      bio: updatedUser.bio,
+      image: user.image,
+      username: user.username,
+      email: user.email,
+      bio: user.bio,
       token: req.token,
     },
   });
 });
 
 const getProfile = asyncHandler(async (req, res) => {
+  
   const username = req.params.username;
   const user = await User.findOne({ username });
-  //console.log(user);
+  console.log(username);
   res.json({
     profile: {
       username: user.username,
