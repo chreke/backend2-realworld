@@ -11,20 +11,22 @@ const app = express();
 const PORT = 3000;
 const JWTSECRET = "lsdkjflsdjwerd2342fsdjfytsdas";
 
-const profileGETRouter = require("./controllers/GETprofile").router;
-const userRouter = require("./controllers/user").router;
+const GETprofileRouter = require("./controllers/GETprofile").router;
+const GetuserRouter = require("./controllers/GETuser").router;
 const GETarticlesRouter = require("./controllers/GETarticles").router;
 const GETtagsRouter = require("./controllers/GETtags").router;
 const GETslugRouter = require("./controllers/GETslug").router;
+const POSTuserRouter = require("./controllers/POSTuser").router;
 
 app.use(express.static("dist"));
 app.use(express.json());
 
-app.use("/api", profileGETRouter);
-// app.use("/api", userRouter);
-app.use("/api", GETarticlesRouter);
-app.use("/api", GETtagsRouter);
-app.use("/api", GETslugRouter);
+// app.use("/api", GETprofileRouter);
+// app.use("/api", GetuserRouter);
+// app.use("/api", GETarticlesRouter);
+// app.use("/api", GETtagsRouter);
+// app.use("/api", GETslugRouter);
+// app.use("/api", POSTuserRouter);
 
 app.use((req, res, next) => {
   const authHeader = req.header("Authorization");
@@ -47,41 +49,49 @@ app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
-app.get("/api/user", async (req, res) => {
-  userLoggedIn = req.user;
-  let user = await User
-    .find({ _id: req.user.userId })
-    .exec()
-  email = user[0].email;
-  token = user[0].token;
-  username = user[0].username;
-  bio = user[0].bio;
-  image = user[0].image;
-  user = ({ user, username, token, bio, image })
-  res.json({ user })
-});
+app.use("/api", GETprofileRouter);
+app.use("/api", GetuserRouter);
+app.use("/api", GETarticlesRouter);
+app.use("/api", GETtagsRouter);
+app.use("/api", GETslugRouter);
+app.use("/api", GetuserRouter);
+app.use("/api", POSTuserRouter);
 
-app.post("/api/users", async (req, res) => {
-  const bio = "";
-  const image = null;
-  const { email, password, username } = req.body.user;
-  let user = new User({ email, password, username, bio, image });
+// app.get("/api/user", async (req, res) => {
+//   userLoggedIn = req.user;
+//   let user = await User
+//     .find({ _id: req.user.userId })
+//     .exec()
+//   email = user[0].email;
+//   token = user[0].token;
+//   username = user[0].username;
+//   bio = user[0].bio;
+//   image = user[0].image;
+//   user = ({ user, username, token, bio, image })
+//   res.json({ user })
+// });
 
-  try {
-    await user.save();
-    const userId = user._id.toString();
-    const token = jwt.sign(
-      { userId, username: username },
-      JWTSECRET,
-      { expiresIn: "2 h", subject: userId }
-    );
-    await User.updateOne({ username: username }, { token: token })
-    user = ({ email, username, token, bio, image })
-    res.json({ user });
-  } catch (err) {
-    console.log(err);
-  }
-});
+// app.post("/api/users", async (req, res) => {
+//   const bio = "";
+//   const image = null;
+//   const { email, password, username } = req.body.user;
+//   let user = new User({ email, password, username, bio, image });
+
+//   try {
+//     await user.save();
+//     const userId = user._id.toString();
+//     const token = jwt.sign(
+//       { userId, username: username },
+//       JWTSECRET,
+//       { expiresIn: "2 h", subject: userId }
+//     );
+//     await User.updateOne({ username: username }, { token: token })
+//     user = ({ email, username, token, bio, image })
+//     res.json({ user });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
 
 app.post("/api/users/login", async (req, res) => {
   const { email, password } = req.body.user;
