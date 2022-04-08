@@ -1,5 +1,11 @@
+
 const asyncHandler = require('express-async-handler');
 const { Article } = require('../models/Article');
+
+
+const { User } =require("../models/User")
+
+
 
 const createArticle = async (req, res) => {
   const { title, description, body, tagList } = req.body.article;
@@ -12,6 +18,7 @@ const createArticle = async (req, res) => {
     author: req.user.userId,
   });
   await entry.save();
+
 
   res.json({
     article: {
@@ -29,21 +36,38 @@ const createArticle = async (req, res) => {
   });
 };
 
-const renderArticles = async (req, res) => {
-  try {
-    const articlesCount = await Article.find().count();
-    const articles = await Article.find().sort('-createdAt').exec();
-    res.json({ articles, articlesCount });
-  } catch (err) {
-    res.json({ message: err });
-  }
-};
-
 const getSingleArticleBySlug = asyncHandler(async (req, res) => {
   const slug = req.params.slug;
   const article = await Article.findOne({ slug }).populate('author').exec();
   res.json({ article });
 });
+=======
+const renderArticles = async (req, res) => {
+    const author = req.query.author
+
+    if(author){
+        try {
+            const user = await User.findOne({username: author})
+            const articlesCount = await Article.find({author: user._id}).count()
+            const articles = await Article.find({author: user._id})
+            res.json({articles, articlesCount})
+        } catch (err) {
+            res.json({message: err})
+        }
+    } else {
+        try {
+            const articlesCount = await Article.find().count()
+            const articles = await Article.find().sort('-createdAt').exec()
+            res.json( { articles, articlesCount })
+           
+            
+        } catch (err) {
+            res.json({message: err})
+        }
+    }
+
+}
+
 
 const updateArticle = asyncHandler(async (req, res) => {
   const slug = req.params.slug;
