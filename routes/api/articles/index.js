@@ -166,11 +166,19 @@ route.put("/:article", async (req, res) => {
 
 
 // FAVORITE ARTICLE
-// route.post("/:article/favorite", (req,res) => {
-//     console.log("Favorite article POST:");
-//     console.log("req")
-//     console.log(req.body)
-// })
+route.post("/:article/favorite", async (req,res) => {
+
+    console.log("Favorite article POST:");
+
+    var article = await Article.findOne({});
+
+    var articleId = "6251421d802b8869d0a358dd"; // For testing purposes
+
+    await Article.findByIdAndUpdate({_id: article._id}, {favorited: true})
+    await Article.findByIdAndUpdate({_id: article._id}, {$inc : {favoritesCount: 1}});
+    
+    res.send({article});
+})
 
 
 module.exports = route
