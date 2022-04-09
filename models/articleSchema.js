@@ -26,7 +26,7 @@ const articleSchema = new mongoose.Schema({
         // type: mongoose.Schema.Types.ObjectId, 
         // ref: 'User',
     },
-    favorited: {type: Boolean, default: false}
+    favorited: {type: Boolean, default: false},
 
 }, { timestamps: true })
 
