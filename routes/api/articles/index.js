@@ -189,21 +189,22 @@ route.post("/:article/favorite", async (req,res) => {
 })
 
 // UNFAVORITE ARTICLE
-// route.delete("/:article/favorite", async (req,res) => {
+route.delete("/:article/favorite", async (req,res) => {
 
-//     console.log("Unfavorite article DELETE:");
+    console.log("Unfavorite article DELETE:");
 
-//     var article = await Article.findOne({});
+    var article = await Article.findOne({slug});
 
-//     // For testing purposes
-//         // var articleId = "62514a9182197faaa9d4b03a"; 
-//         // await Article.findByIdAndUpdate({_id: articleId}, {favorited: false})
-//         // await Article.findByIdAndUpdate({_id: articleId}, {$inc : {favoritesCount: -1}});
+    // For testing purposes
+        // var articleId = "62514a9182197faaa9d4b03a"; 
+        // await Article.findByIdAndUpdate({_id: articleId}, {favorited: false})
+        // await Article.findByIdAndUpdate({_id: articleId}, {$inc : {favoritesCount: -1}});
 
-//     await Article.findByIdAndUpdate({_id: article._id}, {favorited: false})
-//     await Article.findByIdAndUpdate({_id: article._id}, {$inc : {favoritesCount: -1}});
-//     res.send({article});
-// })
+    await Article.findByIdAndUpdate({_id: article._id}, {favorited: false})
+    await Article.findByIdAndUpdate({_id: article._id}, {$inc : {favoritesCount: -1}});
+    article = await Article.findById({_id: article._id});
+    res.send({article});
+})
 
 
 module.exports = route
