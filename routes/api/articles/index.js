@@ -128,6 +128,13 @@ route.post("/", requireLogin, async (req, res) => {
     // Lägger till user_id i article
     req.body.article.author = req.user.user_id
 
+
+    // Skapar slug från artikel titel - https://sv.frwiki.wiki/wiki/Slug_%28journalisme%29
+    let newSlug = req.body.article.title;
+    newSlug = newSlug.replaceAll(' ', '-').toLowerCase()
+
+    req.body.article.slug = newSlug
+
     const article = new Article(req.body.article)
     article.tagList.reverse(); // Reverses the order of the tags in the Array
 
@@ -143,6 +150,7 @@ route.put("/:article", async (req, res) => {
     console.log("Update article PUT:");
     console.log("req")
     console.log(req.body)
+
     slug = "no slug";
     var article = await Article.findOne({ slug });
     article.body = req.body.article.body;
