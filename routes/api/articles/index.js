@@ -126,6 +126,7 @@ route.get("/:slug/comments", (req, res) => {
 // CREATE AN ARTICLE -- Doesn't have "favorited" property, "Author" property
 route.post("/", requireLogin, async (req, res) => {
     // Lägger till user_id i article
+    // req.user kommer från jwt token
     req.body.article.author = req.user.user_id
 
 
@@ -134,9 +135,9 @@ route.post("/", requireLogin, async (req, res) => {
     newSlug = newSlug.replaceAll(' ', '-').toLowerCase()
 
     req.body.article.slug = newSlug
-
     const article = new Article(req.body.article)
-    article.tagList.reverse(); // Reverses the order of the tags in the Array
+
+    article.tagList.reverse(); // Reverses the order of the tags in the Array ? Varför reverse ? (V.)
 
     await article.save();
     res.send({ article });
@@ -151,10 +152,16 @@ route.put("/:article", async (req, res) => {
     console.log("req")
     console.log(req.body)
 
-    slug = "no slug";
-    var article = await Article.findOne({ slug });
-    article.body = req.body.article.body;
-    await article.save();
+    let slug = req.params.article
+    console.log("slug:", slug)
+
+
+    // https://mongoosejs.com/docs/tutorials/findoneandupdate.html
+    const filter = { slug };
+    const update = {
+        body: req.body.article.body
+    };
+    var article = await Article.findOneAndUpdate(filter, update);
     res.send({ article });
 })
 
