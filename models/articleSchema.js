@@ -20,11 +20,11 @@ const articleSchema = new mongoose.Schema({
         type: Number, default: 0
     },
     tagList: [{ type: String }],
-    author: { 
-        type: String,
-        default: "Unknown Author"
-        // type: mongoose.Schema.Types.ObjectId, 
-        // ref: 'User',
+    author: {
+        // type: String,
+        // default: "Unknown Author"
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
     },
 
 }, { timestamps: true })
