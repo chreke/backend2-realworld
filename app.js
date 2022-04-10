@@ -46,8 +46,8 @@ app.use("/api", GETslugRouter);
 app.use("/api", POSTuserRouter);
 app.use("/api", POSTloginRouter);
 app.use("/api", POSTarticlesRouter);
-app.use("/api", PUTuserRouter);
 app.use("/api", POSTfavoriteRouter);
+app.use("/api", PUTuserRouter);
 app.use("/api", DELETEfavoriteRouter);
 
 

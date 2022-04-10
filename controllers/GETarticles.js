@@ -12,10 +12,10 @@ router.get("/articles", async (req, res) => {
         queryParameters = { tagList: req.query.tag }
     }
     else if (req.query.author !== undefined) {
+        // queryParameters = { 'author.username': req.query.author }
         const user = await User.findOne({ username: req.query.author })
         queryParameters = { author: user._id }
     }
-    console.log(queryParameters);
     let articles = await Article
         .find(queryParameters)
         .sort('-createdAt')
