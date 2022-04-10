@@ -20,6 +20,7 @@ const POSTarticlesRouter = require("./controllers/POSTarticles").router;
 const POSTfavoriteRouter = require("./controllers/POSTfavorite").router;
 const PUTuserRouter = require("./controllers/PUTuser").router;
 const DELETEfavoriteRouter = require("./controllers/DELETEfavorite").router;
+const PUTarticlesRouter = require("./controllers/PUTarticles").router;
 
 
 app.use(express.static("dist"));
@@ -49,7 +50,7 @@ app.use("/api", POSTarticlesRouter);
 app.use("/api", POSTfavoriteRouter);
 app.use("/api", PUTuserRouter);
 app.use("/api", DELETEfavoriteRouter);
-
+app.use("/api", PUTarticlesRouter);
 
 mongoose.connect("mongodb://localhost/backend2_GroupProject");
 
