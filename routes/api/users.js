@@ -128,7 +128,12 @@ route.post('/login', async (req, res) => {
     // Använder JWT sign för att skapa en token
     const token = jwt.sign(
         // info som vi sparar i vår token 
-        { username: loggedInUser.username, email: loggedInUser.email },
+        {
+            user_id: loggedInUser._id,
+            username: loggedInUser.username,
+            email: loggedInUser.email,
+
+        },
         JWT_SECRET,
         { expiresIn: "24h", subject: loggedInUser.email }
     );
