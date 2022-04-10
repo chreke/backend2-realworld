@@ -2,7 +2,7 @@ const { Router } = require("express");
 const { User } = require("../../../models/userSchema");
 const { Article } = require("../../../models/articleSchema");
 const { Db } = require("mongodb");
-const token = require("../../../token");
+const { requireLogin } = require("../../../token");
 
 const route = Router();
 
