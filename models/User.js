@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     token: { type: String, default: "" }
 })
 
-userSchema.pre("save", async function(next) {
+userSchema.pre("save", async function (next) {
     if (this.password && this.modifiedPaths().includes("password")) {
         const hash = await bcrypt.hash(this.password, 10)
         this.password = hash
@@ -33,9 +33,7 @@ const getUserByUsername = async (username) => {
 
 const login = async (email, password) => {
     const user = await User.findOne({ email });
-    console.log(user)
-    if (user && (await bcrypt.compare(password, user.password))) 
-    {
+    if (user && (await bcrypt.compare(password, user.password))) {
         return user;
     }
     return null;
