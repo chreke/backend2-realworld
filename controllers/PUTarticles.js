@@ -34,11 +34,9 @@ router.put("/articles/:slug", requireLogin, async (req, res) => {
     let newSlug = slugTitle(title);
 
     Article.findOneAndUpdate(filter, {$set: {title, description, body, slug: newSlug, updatedAt: Date.now()}}, {new: true}, (err, doc) => {
-        // res.json({ article })
         if (err) {
             console.log("Something wrong when updating data!");
         }
-        // res.redirect("/articles")
     })
   })
 
