@@ -1,4 +1,5 @@
-const { createArticle, getAllArticles } = require("../models/Article")
+const { createArticle, getAllArticles, getSelectedArticles } = require("../models/Article")
+const { getUserByUsername } = require("../models/User")
 
 const createNewArticle = async (req, res) => {
     const { title, description, body, tagList } = req.body.article
@@ -7,7 +8,7 @@ const createNewArticle = async (req, res) => {
         description,
         body,
         tagList,
-        author: req.user.username
+        author: req.user.userId
     }
     const article = await createArticle(articleData)
     if (article) {
@@ -18,14 +19,18 @@ const createNewArticle = async (req, res) => {
 }
 
 const getArticles = async (req, res) => {
-    const queryParam = Object.keys(req.query)[0]
+    const queryKey = Object.keys(req.query)[0]
+    const queryValue = Object.values(req.query)[0]
     let articles = []
-    if (queryParam === "author") {
-        articles = await getAllArticles(req.query)
-    } else if (queryParam === "tag") {
-        articles = await getAllArticles({ tagList: { $in: Object.values(req.query)[0] } })
-    } else {
+    if (queryKey === "author") {
+        const user = await getUserByUsername(queryValue)
+        articles = await getSelectedArticles({ author: user._id })
+    } else if (queryKey === "tag") {
+        articles = await getSelectedArticles({ tagList: { $in: queryValue } })
+    } else if (!queryKey) {
         articles = await getAllArticles({})
+    } else {
+        res.sendStatus(404)
     }
 
     const articlesCount = articles.length

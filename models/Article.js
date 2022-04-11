@@ -6,7 +6,7 @@ const articleSchema = mongoose.Schema({
     description: { type: String, required: true },
     body: { type: String, required: true },
     tagList: [String],
-    author: String,
+    author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     favorited: { type: Boolean, default: false },
     favoritesCount: { type: Number, default: 0 }
 }, { timestamps: true })
@@ -17,8 +17,12 @@ const createArticle = async (articleData) => {
     return await Article.create(articleData)
 }
 
-const getAllArticles = async (query) => {
-    return await Article.find(query)
+const getSelectedArticles = async (query) => {
+    return await Article.find(query).populate("author", "username")
 }
 
-module.exports = { createArticle, getAllArticles }
+const getAllArticles = async () => {
+    return await Article.find().populate("author", ("username"))
+}
+
+module.exports = { createArticle, getAllArticles, getSelectedArticles }
