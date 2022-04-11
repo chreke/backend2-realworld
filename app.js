@@ -8,6 +8,7 @@ const { authUser } = require("./controllers/auth");
 const usersRouter = require("./routes/users");
 const userRouter = require("./routes/user")
 const articleRouter = require("./routes/articles")
+const tagsRouter = require("./routes/tags")
 
 const app = express()
 const PORT = 3000;
@@ -22,7 +23,8 @@ mongoose.connect(process.env.MONGO_URI)
     app.use("/api/users", usersRouter)
     app.use("/api/user", userRouter)
     app.use("/api/articles", articleRouter)
-    
+    app.use("/api/tags", tagsRouter)
+
 
     app.get("/", (_req, res) => {
       res.sendFile(path.join(__dirname, "dist", "index.html"));
