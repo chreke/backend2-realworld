@@ -1,5 +1,6 @@
 const { createArticle, getAllArticles, getSelectedArticles } = require("../models/Article")
 const { getUserByUsername } = require("../models/User")
+const { createTags } = require("../models/Tag")
 
 const createNewArticle = async (req, res) => {
     const { title, description, body, tagList } = req.body.article
@@ -12,6 +13,15 @@ const createNewArticle = async (req, res) => {
     }
     const article = await createArticle(articleData)
     if (article) {
+        if (article.tagList) {
+            try {
+                const modifiedTags = article.tagList.map(tag => ({ tag }))
+                await createTags(modifiedTags)
+            }
+            catch (err) {
+                console.log(err)
+            }
+        }
         res.json({ article })
     } else {
         res.sendStatus(400)
