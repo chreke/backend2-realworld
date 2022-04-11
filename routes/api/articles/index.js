@@ -30,8 +30,7 @@ route.get("/:slug", async (req, res) => {
 })
 
 
-// CREATE AN ARTICLE -- Doesn't have "favorited" property, "Author" property
-
+// CREATE AN ARTICLE
 route.post("/", requireLogin, async (req, res) => {
     // Lägger till user_id i article
     // req.user kommer från jwt token
@@ -54,7 +53,6 @@ route.post("/", requireLogin, async (req, res) => {
 
 
 // UPDATE AN ARTICLE
-// It works but I can't identify the article I'm updating without being able to know which user is executing the PUT method
 route.put("/:article", async (req, res) => {
 
     let slug = req.params.article
