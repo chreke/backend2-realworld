@@ -69,6 +69,7 @@ route.get("/:slug", async (req, res) => {
     res.send({ article })
     console.log("article:")
     console.log(article)
+
     // res.send({
     //     "article": {
     //         "slug": req.params.slug,
@@ -124,6 +125,7 @@ route.get("/:slug/comments", (req, res) => {
 
 
 // CREATE AN ARTICLE -- Doesn't have "favorited" property, "Author" property
+
 route.post("/", requireLogin, async (req, res) => {
     // Lägger till user_id i article
     // req.user kommer från jwt token
@@ -167,11 +169,44 @@ route.put("/:article", async (req, res) => {
 
 
 // FAVORITE ARTICLE
-// route.post("/:article/favorite", (req,res) => {
-//     console.log("Favorite article POST:");
-//     console.log("req")
-//     console.log(req.body)
-// })
+route.post("/:article/favorite", async (req,res) => {
+
+    console.log("Favorite article POST:");
+
+    var article = await Article.findOne({slug});
+    
+    // For testing purposes
+        // var articleId = "62514a9182197faaa9d4b03a"; 
+        // await Article.findByIdAndUpdate({_id: articleId}, {favorited: true})
+        // await Article.findByIdAndUpdate({_id: articleId}, {$inc : {favoritesCount: 1}});
+
+    await Article.findByIdAndUpdate({_id: article._id}, {favorited: true})
+    await Article.findByIdAndUpdate({_id: article._id}, {$inc : {favoritesCount: 1}});
+    article = await Article.findById({_id: article._id});
+    
+    res.send({article});
+    console.log("from FAVORITE ARTICLE POST: article")
+    console.log(article)
+    console.log("Favorite article POST END:");
+})
+
+// UNFAVORITE ARTICLE
+route.delete("/:article/favorite", async (req,res) => {
+
+    console.log("Unfavorite article DELETE:");
+
+    var article = await Article.findOne({slug});
+
+    // For testing purposes
+        // var articleId = "62514a9182197faaa9d4b03a"; 
+        // await Article.findByIdAndUpdate({_id: articleId}, {favorited: false})
+        // await Article.findByIdAndUpdate({_id: articleId}, {$inc : {favoritesCount: -1}});
+
+    await Article.findByIdAndUpdate({_id: article._id}, {favorited: false})
+    await Article.findByIdAndUpdate({_id: article._id}, {$inc : {favoritesCount: -1}});
+    article = await Article.findById({_id: article._id});
+    res.send({article});
+})
 
 
 module.exports = route
