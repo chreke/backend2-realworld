@@ -44,7 +44,7 @@ route.post("/", requireLogin, async (req, res) => {
     req.body.article.slug = newSlug
     const article = new Article(req.body.article)
 
-    article.tagList.reverse(); // Reverses the order of the tags in the Array ? Varför reverse ? (V.)
+    article.tagList.reverse(); // Reverses the order of the tags in the Array
 
     await article.save();
     res.send({ article });
