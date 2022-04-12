@@ -66,7 +66,7 @@ const login = asyncHandler(async (req, res) => {
 
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = generateToken(user);
-    console.log(typeof token); //string
+    //string
 
     return res.json({
       user: {
@@ -87,7 +87,7 @@ const login = asyncHandler(async (req, res) => {
 
 const getMe = asyncHandler(async (req, res) => {
   const user = req.user.username;
-  console.log(user)
+ 
   const { userId } = user;
   const currentUser = await User.findOne({ _id: userId });
 
@@ -105,7 +105,7 @@ const getMe = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
   const user = req.user;
   const { userId } = user;
-  console.log(userId)
+ 
   // const updatedUser = await User.findOne({ _id: userId });
 
   // updatedUser.image = req.body.user.image;
@@ -145,7 +145,7 @@ const getProfile = asyncHandler(async (req, res) => {
   
   const username = req.params.username;
   const user = await User.findOne({ username });
-  console.log(username);
+
   res.json({
     profile: {
       username: user.username,

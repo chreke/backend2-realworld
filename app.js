@@ -12,6 +12,8 @@ app.use(authorizeUser);
 
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/', require('./routes/tagRoutes'))
+
 app.use('/', require('./routes/userRoutes'));
 app.use('/', require('./routes/articleRoutes'));
 
