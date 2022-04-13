@@ -9,6 +9,7 @@ const auth = require("./routes/auth")
 const article = require("./routes/article")
 const { User } = require("./models/user");
 const tags = require("./routes/tags")
+const profile = require("./routes/profile")
 const app = express();
 const PORT = 3000;
 app.use(cors());
@@ -27,6 +28,7 @@ app.use(express.static("dist"));
 app.use("/api/users", user)
 app.use("/api/articles", article)
 app.use("/api/tags", tags)
+app.use("/api", profile)
 mongoose.connect(MONGODB_URI);
 
 app.listen(PORT, () => {
