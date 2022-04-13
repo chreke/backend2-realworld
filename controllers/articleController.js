@@ -1,15 +1,22 @@
 const {createArticle, getAllArticle, findArticlesQuery, findOneArticle, findOneAndUpdateArticle, getFavoritedArticle, favoriteArticle, unFavoriteArticle, deleteArticle} = require("../models/article")
 exports.article_Create = async function(req, res, next) {
     const article = await createArticle(req.body.article, req.user)
-    res.json({article})
+    if(article === undefined){
+        res.sendStatus(400)
+    }else{
+        res.json({article})  
+    }
+    
 }
 exports.get_Article = async function(req, res, next) {
-        /* const articles = await getAllArticle() */
-        /* let articlesCount = articles.length
-        res.json({articles, articlesCount}) */
-        const articles = await findArticlesQuery(req.query, req.user.username)
-        let articlesCount = articles.length
-        res.json({articles, articlesCount}) 
+        const articles = await findArticlesQuery(req.query, req.user)
+        if(articles !== null){
+          let articlesCount = articles.length
+          res.json({articles, articlesCount})
+        }else {
+         res.sendStatus(404)   
+        }
+         
      
 }
 exports.find_Article_Slug = async function(req, res, next) {
