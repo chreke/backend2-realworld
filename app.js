@@ -10,12 +10,13 @@ const article = require("./routes/article")
 const { User } = require("./models/user");
 const tags = require("./routes/tags")
 const app = express();
-const PORT = 3000;
+//const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 app.use(auth)
 
 const MONGODB_URI = process.env.MONGODB_URI;
+const PORT = process.env.PORT;
 
  app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
