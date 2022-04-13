@@ -10,7 +10,9 @@ const mongoose = require("mongoose");
 const { use } = require("passport");
 
 const app = express();
-const PORT = 3000;
+
+const PORT = process.env.PORT;
+const MONGODB_URL = process.env.MONGODB_URL;
 
 app.use(express.json());
 app.use(express.static("dist"));
@@ -143,7 +145,7 @@ app.post("/api/articles", requireLogin, async (req, res) => {
   }
 });
 
-mongoose.connect("mongodb://localhost/realworld");
+mongoose.connect(MONGODB_URL);
 app.listen(PORT, () => {
   console.log(`Started Express server on port ${PORT}`);
 });
