@@ -22,7 +22,9 @@ exports.user_login = async function(req, res, next) {
           })
           const user = await User.findOneAndUpdate({email}, {token: token}, {new: true}).select({"password": false})
           res.json({user})
-        } 
+        }else {
+          res.sendStatus(401)
+        }
 }
 
 exports.user_update = async function(req, res, next) {
