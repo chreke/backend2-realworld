@@ -62,7 +62,6 @@ const registerUser = asyncHandler(async (req, res) => {
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body.user;
   const user = await User.findOne({ email });
-  
 
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = generateToken(user);
@@ -86,8 +85,9 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const getMe = asyncHandler(async (req, res) => {
-  const user = req.user.username;
- 
+
+  const user = req.user;
+  console.log(user);
   const { userId } = user;
   const currentUser = await User.findOne({ _id: userId });
 
@@ -103,9 +103,39 @@ const getMe = asyncHandler(async (req, res) => {
 });
 
 
+const updateUser = asyncHandler(async (req, res) => {
+  const user = req.user;
+  const { userId } = user;
+
+  let password = req.body.user.password;
+
+  const hash = await bcrypt.hash(password, 10);
+  password = hash;
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    {
+      image: req.body.user.image,
+      username: req.body.user.username,
+      email: req.body.user.email,
+      bio: req.body.user.bio,
+      password,
+    },
+    { new: true }
+  );
+
+  res.json({
+    user: {
+      image: updatedUser.image,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      bio: updatedUser.bio,
+      token: req.token,
+    },
+  });
+});
 
 const getProfile = asyncHandler(async (req, res) => {
-  
   const username = req.params.username;
   const user = await User.findOne({ username });
 

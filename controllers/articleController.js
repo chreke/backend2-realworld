@@ -3,7 +3,7 @@ const asyncHandler = require('express-async-handler');
 const { Article } = require('../models/Article');
 
 
-const { User } =require("../models/User")
+const { User } = require("../models/User")
 
 
 
