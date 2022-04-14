@@ -59,6 +59,7 @@ const renderArticles = async (req, res) => {
         } else if (tag){
           const articles = await Article.find({tagList: tag})
           const articlesCount = await Article.find({tagList: tag}).count()
+          
 
           console.log(articles)
           res.json({articles, articlesCount})

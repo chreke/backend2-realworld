@@ -102,44 +102,7 @@ const getMe = asyncHandler(async (req, res) => {
   });
 });
 
-const updateUser = asyncHandler(async (req, res) => {
-  const user = req.user;
-  const { userId } = user;
- 
-  // const updatedUser = await User.findOne({ _id: userId });
 
-  // updatedUser.image = req.body.user.image;
-  // updatedUser.username = req.body.user.username;
-  // updatedUser.email = req.body.user.email;
-  // updatedUser.bio = req.body.user.bio;
-  // updateUser.password = req.body.user.password
-  
-  // updatedUser.save();
-  let password = req.body.user.password
-
-  const hash = await bcrypt.hash(password, 10);
-  password = hash;
-
-  await User.findByIdAndUpdate(
-    userId, { 
-      image: req.body.user.image, 
-      username: req.body.user.username, 
-      email: req.body.user.email, 
-      bio: req.body.user.bio,
-      password
-    }, { new: true } )
-
-
-  res.json({
-    user: {
-      image: user.image,
-      username: user.username,
-      email: user.email,
-      bio: user.bio,
-      token: req.token,
-    },
-  });
-});
 
 const getProfile = asyncHandler(async (req, res) => {
   
