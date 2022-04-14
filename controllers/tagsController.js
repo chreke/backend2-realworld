@@ -15,7 +15,7 @@ const filterdTags = articlesTag.filter(element => {
 
 let tags = [... new Set(filterdTags)]
 
-console.log(tags)
+
 
 res.json({ tags });
 }
