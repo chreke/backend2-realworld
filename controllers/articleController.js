@@ -45,7 +45,9 @@ const getSingleArticleBySlug = asyncHandler(async (req, res) => {
 const renderArticles = async (req, res) => {
     const author = req.query.author
     const tag = req.query.tag
-    console.log(tag)
+    const favorited = req.query.favorited
+
+   
 
     if(author){
         try {
@@ -56,13 +58,21 @@ const renderArticles = async (req, res) => {
               } catch (err) {
             res.json({message: err})
             }
-        } else if (tag){
+      } else if (tag){
           const articles = await Article.find({tagList: tag})
           const articlesCount = await Article.find({tagList: tag}).count()
           
 
           console.log(articles)
           res.json({articles, articlesCount})
+        } else if (favorited){
+          const user = await User.findOne({username: favorited})
+          const articles = await Article.find({favoritedBy: user._id})
+          const articlesCount = await Article.find({favoritedBy: user._id}).count()
+          console.log(articles)
+          res.json({articles, articlesCount})
+            
+        
         } else {
           try {
             const articlesCount = await Article.find().count()
@@ -79,7 +89,7 @@ const renderArticles = async (req, res) => {
 
 const deleteArticle = async(req, res) => {
   const slug = req.params.slug
-  console.log(slug)
+ 
   await Article.deleteOne({ slug })
   
   
@@ -89,7 +99,7 @@ const deleteArticle = async(req, res) => {
 const updateArticle = asyncHandler(async (req, res) => {
   const slug = req.params.slug;
   const article = await Article.findOne({ slug });
-  console.log(req.body);
+  
   article.title = req.body.article.title;
   article.description = req.body.article.description;
   article.body = req.body.article.body;
@@ -99,11 +109,51 @@ const updateArticle = asyncHandler(async (req, res) => {
 
   res.json({ article });
 });
+
+const setFavorited = asyncHandler(async (req, res) => {
+  const slug = req.params.slug
+
+  await Article.updateOne(
+    { slug: slug },
+    {
+      $push: { favoritedBy: req.user.userId },
+      $inc: { favoritesCount: 1 },
+      favorited: true
+    })
+  let article = await Article
+    .find({ slug: slug })
+    .populate("author")
+    .exec()
+
+  article = article[0]
+  res.json({ article });
+});
+
+const removeFavorited = asyncHandler(async (req, res) => {
+  console.log("DELETE")
+  let slug = req.params.slug;
+  await Article.updateOne(
+      { slug: slug },
+      {
+          $pull: { favoritedBy: req.user.userId },
+          $inc: { favoritesCount: -1 },
+          favorited: false
+      })
+  let article = await Article
+      .find({ slug: slug })
+      .populate("author")
+      .exec()
+
+  article = article[0]
+  res.json({ article });
+});
+
 module.exports = {
   createArticle,
   renderArticles,
   getSingleArticleBySlug,
   updateArticle,
   deleteArticle,
- 
+  setFavorited,
+  removeFavorited
 };
