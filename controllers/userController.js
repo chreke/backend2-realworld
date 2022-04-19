@@ -1,7 +1,8 @@
-const jwt = require("jsonwebtoken")
-const {User, updateProfile} = require("../models/user")
-const JWT_SECRET = process.env.JWT_SECRET
+const jwt = require("jsonwebtoken");
+const { User, updateProfile } = require("../models/user");
+const JWT_SECRET = process.env.JWT_SECRET;
 exports.verify = (req, res, next) => {
+
     if(req.user){
         next()
     }else {
@@ -27,19 +28,36 @@ exports.user_login = async function(req, res, next) {
         }
 }
 
-exports.user_update = async function(req, res, next) {
-    const {userId} = req.user
-    const userInfo = { username, email, password, bio, image, token} = req.body.user
-    const user = await updateProfile(userInfo,userId ) 
-    res.json({user}) 
-}
-exports.create_user = async function(req, res, next) {
-  const { username, password, email } = req.body.user;   
+
+exports.user_update = async function (req, res, next) {
+  const { userId } = req.user;
+  const userInfo = ({ username, email, password, bio, image, token } =
+    req.body.user);
+  const user = await updateProfile(userInfo, userId);
+  res.json({ user });
+};
+exports.create_user = async function (req, res, next) {
+  const { username, password, email } = req.body.user;
   const user = new User({ username, password, email });
   await user.save();
-  res.json(req.body)
-}
-exports.getUser = async function(req, res, next) {
-  const user = User.find({})
-  res.json({user})
-}
+  res.json(req.body);
+};
+exports.getUser = async function (req, res, next) {
+  const user = User.find({});
+  res.json({ user });
+};
+
+// @desc   Get user profile
+// @route  GET /profiles/:username
+// @access Authorization
+exports.getUserProfile = async function (req, res, next) {
+  console.log(req.user);
+  if (req.user) {
+    const username = req.params.username;
+    const user = await User.findOne({username: username});
+    console.log("getUserProfile:", user);
+    res.json(user);
+  } else {
+    res.status(401).json({ message: "Not authorized" });
+  }
+};

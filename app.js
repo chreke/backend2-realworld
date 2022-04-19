@@ -9,13 +9,15 @@ const auth = require("./routes/auth")
 const article = require("./routes/article")
 const { User } = require("./models/user");
 const tags = require("./routes/tags")
+const profile = require("./routes/profile")
 const app = express();
-const PORT = 3000;
+//const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 app.use(auth)
 
 const MONGODB_URI = process.env.MONGODB_URI;
+const PORT = process.env.PORT;
 
  app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
@@ -27,6 +29,7 @@ app.use(express.static("dist"));
 app.use("/api/users", user)
 app.use("/api/articles", article)
 app.use("/api/tags", tags)
+app.use("/api", profile)
 mongoose.connect(MONGODB_URI);
 
 app.listen(PORT, () => {
