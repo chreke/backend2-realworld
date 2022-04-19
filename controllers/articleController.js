@@ -10,7 +10,7 @@ exports.article_Create = async function(req, res, next) {
 }
 exports.get_Article = async function(req, res, next) {
         const articles = await findArticlesQuery(req.query, req.user)
-        if(articles !== null){
+        if(articles !== null && articles.length > 0){
           let articlesCount = articles.length
           res.json({articles, articlesCount})
         }else {
