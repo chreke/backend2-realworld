@@ -2,7 +2,7 @@ const res = require("express/lib/response")
 const mongoose = require("mongoose")
 const {User} = require("./user")
 const articleSchema = mongoose.Schema({
-    author: {type: String, ref: "User"},
+    author: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
     title: {type: String, required: true},
     slug: {type: String, required: true, unique: true},
     body: {type: String, required: true},
@@ -16,7 +16,7 @@ const articleSchema = mongoose.Schema({
 const Article = mongoose.model("Article", articleSchema)
 
 const createArticle = async (article, user) => {
-    article.author = user.username
+    article.author = user.userId
     article.slug = article.title
     const result = await Article.create(article).catch((err) => {
         if(err){
@@ -26,13 +26,17 @@ const createArticle = async (article, user) => {
     return result
 }
 const getAllArticle = async() => {
-    return await Article.find()
+    return await Article.find().populate("author", "username bio image -_id")
 }
 const findArticlesQuery = async(query, user) => {
     if(query.tag !== undefined){
-        return await Article.find({tagList: query.tag})
+        return await Article.find({tagList: query.tag}).populate("author", "username bio image -_id")
+        
     } else if(query.author !== undefined){
-        const article = await Article.aggregate([{
+        const user = await User.findOne({username: query.author})
+        const userId = user._id
+        const article = await Article.find({author: userId}).populate("author", "username bio image -_id")
+        /* const article2 = await Article.aggregate([{
             '$match': {
               'author': `${query.author}`
             }
@@ -60,26 +64,21 @@ const findArticlesQuery = async(query, user) => {
                   "author.email": 0,
               }
           }
-        ])
+        ]) */
         return article
-        /* const author = await User.findOne({username: query.author}, {_id: true})
-        if(author){
-          const article = await Article.find({author: author._id}).populate("author", "username")
-          return article
-        } */
     }else if (query.favorited !== undefined){
-        const article = await Article.find({favoritedBy: user.username}).select({favoritedBy: false})
+        const article = await Article.find({favoritedBy: user.username}).populate("author", "username bio image -_id").select({favoritedBy: false})
         article.forEach(item => item.favorited = true) 
         return article 
     }else {   
-        return await Article.find()
+        return await Article.find().populate("author", "username bio image -_id")
     }
 }
 const findOneArticle = async(slug) => {
-    return await Article.findOne({slug: slug})
+    return await Article.findOne({slug: slug}).populate("author", "username bio image -_id")
 }
 const findOneAndUpdateArticle = async(slug, article) => { 
-    return await Article.findOneAndUpdate({slug: slug}, article, {new: true})
+    return await Article.findOneAndUpdate({slug: slug}, article, {new: true}).populate("author", "username bio image -_id")
 }
 const findAllTags = async() => {
     return await Article.find().select({tagList: true, _id: false})
@@ -89,7 +88,7 @@ const favoriteArticle = async(slug, user) => {
     if(article.favoritedBy.includes(user.username) === true){
         return "you have already liked"
     }else {
-        const articles = await Article.findOneAndUpdate(slug, {$addToSet: {favoritedBy: user.username}, $inc: {favoritesCount: +1}}, {new: true}).select({favoritedBy: false})
+        const articles = await Article.findOneAndUpdate(slug, {$addToSet: {favoritedBy: user.username}, $inc: {favoritesCount: +1}}, {new: true}).populate("author", "username bio image -_id").select({favoritedBy: false})
         articles.favorited = true
         return articles
     }
@@ -99,10 +98,10 @@ const unFavoriteArticle = async(slug, user) => {
     if(article.favoritedBy.includes(user.username) === false){
         return "you have already unliked"
     }else {
-        return await Article.findOneAndUpdate(slug, {$pull: {favoritedBy: user.username}, $inc: {favoritesCount: -1}}, {new: true}).select({favoritedBy: false})
+        return await Article.findOneAndUpdate(slug, {$pull: {favoritedBy: user.username}, $inc: {favoritesCount: -1}}, {new: true}).populate("author", "username bio image -_id").select({favoritedBy: false})
     } 
 } 
 const deleteArticle = async(slug, username) => {
-    return await Article.findOneAndDelete({slug: slug, username: username})
+    return await Article.findOneAndDelete({slug: slug, username: username}).populate("author", "username bio image -_id")
 }
 module.exports = {deleteArticle, createArticle, getAllArticle, findArticlesQuery, findOneArticle,findOneAndUpdateArticle, findAllTags, favoriteArticle,unFavoriteArticle }
