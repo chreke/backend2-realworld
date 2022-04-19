@@ -38,7 +38,7 @@ exports.create_user = async function(req, res, next) {
   const user = new User({ username, password, email });
   await user.save(function(err, user ){
     if(err){
-      res.status(400).json("there is already account with this email")
+      res.status(400).json("there is already account with this emai")
     }else {
       res.json({user})
     }
