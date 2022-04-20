@@ -3,7 +3,7 @@ const asyncHandler = require('express-async-handler');
 const { Article } = require('../models/Article');
 
 
-const { User } =require("../models/User")
+const { User } = require("../models/User")
 
 
 
@@ -44,6 +44,8 @@ const getSingleArticleBySlug = asyncHandler(async (req, res) => {
 
 const renderArticles = async (req, res) => {
     const author = req.query.author
+    const tag = req.query.tag
+    console.log(tag)
 
     if(author){
         try {
@@ -51,16 +53,22 @@ const renderArticles = async (req, res) => {
             const articlesCount = await Article.find({author: user._id}).count()
             const articles = await Article.find({author: user._id})
             res.json({articles, articlesCount})
-        } catch (err) {
+              } catch (err) {
             res.json({message: err})
-        }
-    } else {
-        try {
+            }
+        } else if (tag){
+          const articles = await Article.find({tagList: tag})
+          const articlesCount = await Article.find({tagList: tag}).count()
+          
+
+          console.log(articles)
+          res.json({articles, articlesCount})
+        } else {
+          try {
             const articlesCount = await Article.find().count()
             const articles = await Article.find().sort('-createdAt').exec()
             res.json( { articles, articlesCount })
            
-            
         } catch (err) {
             res.json({message: err})
         }
@@ -68,6 +76,15 @@ const renderArticles = async (req, res) => {
 
 }
 
+
+const deleteArticle = async(req, res) => {
+  const slug = req.params.slug
+  console.log(slug)
+  await Article.deleteOne({ slug })
+  
+  
+  
+}
 
 const updateArticle = asyncHandler(async (req, res) => {
   const slug = req.params.slug;
@@ -87,4 +104,6 @@ module.exports = {
   renderArticles,
   getSingleArticleBySlug,
   updateArticle,
+  deleteArticle,
+ 
 };

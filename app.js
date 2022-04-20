@@ -1,18 +1,23 @@
+
+const dotenv = require("dotenv")
+dotenv.config()
+const PORT = process.env.PORT;
+
 const express = require('express');
 const path = require('path');
 const mongoose = require('./database');
 const { authorizeUser } = require('./middlewares/authMiddleware');
-const dotenv = require("dotenv")
 
-dotenv.config()
 const app = express();
-const PORT = process.env.PORT;
+
 
 app.use(express.static('dist'));
 app.use(express.json());
 app.use(authorizeUser);
 
 app.use(express.urlencoded({ extended: true }));
+
+app.use('/', require('./routes/tagRoutes'))
 
 app.use('/', require('./routes/userRoutes'));
 app.use('/', require('./routes/articleRoutes'));
