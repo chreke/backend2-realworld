@@ -38,6 +38,10 @@ const articleSchema = new Schema({
       type: String, 
       slug: "title" 
     },
+    favoritedBy: [{
+      type: Schema.Types.ObjectId, 
+      ref: "User"
+    }]
     
   },  { timestamps: true });
 

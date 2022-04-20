@@ -87,7 +87,7 @@ const login = asyncHandler(async (req, res) => {
 const getMe = asyncHandler(async (req, res) => {
 
   const user = req.user;
-  console.log(user);
+  
   const { userId } = user;
   const currentUser = await User.findOne({ _id: userId });
 
