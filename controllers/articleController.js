@@ -47,40 +47,40 @@ const renderArticles = async (req, res) => {
     const tag = req.query.tag
     const favorited = req.query.favorited
 
+    let articlesCount = 0
+    let articles = []
    
 
     if(author){
-        try {
+      try {
             const user = await User.findOne({username: author})
-            const articlesCount = await Article.find({author: user._id}).count()
-            const articles = await Article.find({author: user._id})
+            articlesCount = await Article.find({author: user._id}).count()
+            articles = await Article.find({author: user._id})
             res.json({articles, articlesCount})
               } catch (err) {
-            res.json({message: err})
+            res.json({articles, articlesCount})
             }
       } else if (tag){
-          const articles = await Article.find({tagList: tag})
-          const articlesCount = await Article.find({tagList: tag}).count()
+          articles = await Article.find({tagList: tag})
+          articlesCount = await Article.find({tagList: tag}).count()
           
-
-          console.log(articles)
           res.json({articles, articlesCount})
         } else if (favorited){
           const user = await User.findOne({username: favorited})
-          const articles = await Article.find({favoritedBy: user._id})
-          const articlesCount = await Article.find({favoritedBy: user._id}).count()
+          articles = await Article.find({favoritedBy: user._id})
+          articlesCount = await Article.find({favoritedBy: user._id}).count()
           console.log(articles)
           res.json({articles, articlesCount})
             
         
         } else {
           try {
-            const articlesCount = await Article.find().count()
-            const articles = await Article.find().sort('-createdAt').exec()
+            articlesCount = await Article.find().count()
+            articles = await Article.find().sort('-createdAt').exec()
             res.json( { articles, articlesCount })
            
         } catch (err) {
-            res.json({message: err})
+            res.json({articles, articlesCount})
         }
     }
 
@@ -99,15 +99,15 @@ const deleteArticle = async(req, res) => {
 const updateArticle = asyncHandler(async (req, res) => {
   const slug = req.params.slug;
   const article = await Article.findOne({ slug });
-  
-  article.title = req.body.article.title;
-  article.description = req.body.article.description;
-  article.body = req.body.article.body;
-  article.tagList = req.body.article.tagList;
-  await article.save();
-  
+  if (article) {
+    article.body = req.body.article.body;
 
-  res.json({ article });
+    await article.save();
+    res.json({ article });
+  } else {
+    res.sendStatus(400);
+  }
+
 });
 
 const setFavorited = asyncHandler(async (req, res) => {
